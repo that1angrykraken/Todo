@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="repeat_frequencies">
+        <item>@string/dont_repeat</item>
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+        <item>@string/yearly</item>
+    </array>
+</resources>

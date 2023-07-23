@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Tasks</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_icon">User icon</string>
+    <string name="homepage_tabs">Homepage tabs</string>
+    <string name="add_task">Add task</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="no_filter">No filter</string>
+    <string name="no_active_tasks">All done!\nThere aren\'t any uncompleted tasks.</string>
+    <string name="current_tasks_list">Select current tasks list</string>
+    <string name="no_completed_tasks">Empty!\nYou haven\'t completed any tasks.</string>
+    <string name="no_uncompleted_tasks">No uncompleted tasks.</string>
+    <string name="toolbar_title">Tasks</string>
+    <string name="button_save">Save</string>
+    <string name="button_delete">Delete</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_description">Add description</string>
+    <string name="mark_important">Mark as important</string>
+    <string name="sw_repeat">Repeat</string>
+    <string name="set_date_time">Set date/time</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="pick_from_gallery">Pick photo from Gallery</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="mark_completed">Mark completed</string>
+    <string name="mark_uncompleted">Mark uncompleted</string>
+    <string name="my_tasks">My tasks</string>
+    <string name="lists">Lists</string>
+    <string name="create_new_list">Create new list</string>
+    <string name="select_a_list">Select a list</string>
+    <string name="list_action">List action</string>
+    <string name="button_done">Done</string>
+    <string name="enter_list_title">Enter list title</string>
+    <string name="important">Important</string>
+    <string name="completed">Completed</string>
+    <string name="select_date">Select date</string>
+    <string name="date_time_display_format" translatable="false">%1$s/%2$s/%3$d - %4$s:%5$s</string>
+    <string name="repeat_frequency">Repeat frequency</string>
+    <string name="dont_repeat">None</string>
+</resources>

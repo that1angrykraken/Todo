@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="l"
+            type="seamonster.kraken.todo.model.TaskList" />
+
+        <variable
+            name="currentId"
+            type="Integer" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:backgroundTint="?colorBackgroundFloating"
+        android:checked="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="0dp"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/shapeableImageView"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/round_done_48"
+                android:visibility="@{l.id == currentId ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?colorOnSurface" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{l.name}"
+                android:textAppearance="?textAppearanceBodyLarge"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

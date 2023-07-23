@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="t"
+            type="seamonster.kraken.todo.model.Task" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:paddingVertical="6dp">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkboxCompleted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={t.completed}"
+                app:buttonCompat="@drawable/completed_checkbox_selector"
+                app:buttonTint="?colorPrimary"
+                app:layout_constraintBottom_toTopOf="@id/chipDateTime"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{t.title}"
+                android:textAppearance="?textAppearanceTitleMedium"
+                app:layout_constraintEnd_toStartOf="@+id/checkboxStar"
+                app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textDesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{t.desc}"
+                android:visibility="@{t.desc==null||t.desc.empty?View.GONE:View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@+id/checkboxStar"
+                app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
+                app:layout_constraintTop_toBottomOf="@id/textTitle" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:checkable="false"
+                android:visibility="@{t.year == 0 || t.completed ? View.GONE : View.VISIBLE}"
+                app:chipIcon="@drawable/round_repeat_48"
+                app:chipIconEnabled="@{t.repeat > 0}"
+                app:ensureMinTouchTargetSize="false"
+                app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
+                app:layout_constraintTop_toBottomOf="@id/textDesc" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkboxStar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={t.important}"
+                android:visibility="@{t.completed ? View.GONE : View.VISIBLE}"
+                app:buttonCompat="@drawable/important_checkbox_selector"
+                app:buttonTint="?colorPrimary"
+                app:layout_constraintBottom_toTopOf="@id/chipDateTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

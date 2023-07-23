@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:title="@string/toolbar_title"
+                app:titleCentered="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonUserIcon"
+                    style="?materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/user_icon"
+                    android:tooltipText="@string/user_icon"
+                    app:icon="@drawable/round_account_circle_48"
+                    app:iconSize="28dp" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/homepage_tabs"
+                app:tabInlineLabel="true" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:animateLayoutChanges="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonUpcomingFilter"
+                style="?materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/upcoming"
+                android:tooltipText="@string/upcoming"
+                app:icon="@drawable/round_upcoming_48" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSelectList"
+                style="?materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxWidth="160dp"
+                android:maxLines="1"
+                android:text="@string/my_tasks"
+                android:textColor="?colorOnSurfaceVariant"
+                android:tooltipText="@string/current_tasks_list"
+                app:icon="@drawable/round_list_alt_48" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonListAction"
+                style="?materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/list_action"
+                android:textColor="?colorOnSurfaceVariant"
+                android:tooltipText="@string/list_action"
+                app:icon="@drawable/round_more_vert_24"
+                app:iconTint="?colorOnSurfaceVariant" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/fabAddTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/add_task"
+                android:tooltipText="@string/add_task"
+                app:icon="@drawable/round_add_48" />
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

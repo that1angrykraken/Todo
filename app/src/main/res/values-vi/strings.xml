@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tasks</string>
+    <string name="daily">Hàng ngày</string>
+    <string name="weekly">Hàng tuần</string>
+    <string name="monthly">Hàng tháng</string>
+    <string name="yearly">Hàng năm</string>
+    <string name="dont_repeat">Không lặp lại</string>
+</resources>
