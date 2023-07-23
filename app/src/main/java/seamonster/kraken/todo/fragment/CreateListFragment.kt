@@ -5,11 +5,13 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.FragmentCreateListBinding
 import seamonster.kraken.todo.model.TaskList
@@ -17,10 +19,16 @@ import seamonster.kraken.todo.viewmodel.AppViewModel
 
 class CreateListFragment : DialogFragment() {
 
+    companion object{
+        const val TAG: String = "CreateListFragment"
+    }
+
     private lateinit var binding: FragmentCreateListBinding
-    private val viewModel: AppViewModel by viewModels()
+    private lateinit var viewModel: AppViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        viewModel = ViewModelProvider(requireActivity())[AppViewModel::class.java]
+
         binding = FragmentCreateListBinding.inflate(layoutInflater)
         val dialog = Dialog(requireContext(), R.style.DialogTheme)
 
@@ -37,6 +45,17 @@ class CreateListFragment : DialogFragment() {
         return dialog
     }
 
+    private fun rename(l: TaskList, count: Int = 1) {
+        if(l.name.isEmpty()) l.name = getString(R.string.new_list)
+        if (viewModel.lists.value!!.any { it.name == l.name }) {
+            Log.d(TAG, "rename: exist")
+            val len = l.name.length
+            if (count > 1) l.name = l.name.removeRange(len - 3, len)
+            l.name += "($count)"
+            rename(l, count + 1)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         binding.textListName.requestFocus()
@@ -48,14 +67,6 @@ class CreateListFragment : DialogFragment() {
             inputMethodManager.showSoftInput(binding.textListName, InputMethodManager.SHOW_IMPLICIT)
         }
 //        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-    }
-
-    private fun rename(l: TaskList, count: Int = 1) {
-        if (viewModel.lists.value?.any { it.name == l.name } == true) {
-            if (count > 1) l.name = l.name.removeRange(l.name.length - 2, l.name.length - 1)
-            l.name += "$count"
-            rename(l, count + 1)
-        }
     }
 
 }

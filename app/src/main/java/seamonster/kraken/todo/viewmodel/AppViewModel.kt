@@ -31,17 +31,17 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         lists = dataSource.getAllLists()
     }
 
-    fun importantTasks(): LiveData<List<Task>> = currentList.switchMap {
+    val importantTasks: LiveData<List<Task>> = currentList.switchMap {
         Log.d(TAG, "importantTasks: updated")
         dataSource.getImportant(it)
     }
 
-    fun activeTasks(): LiveData<List<Task>> = currentList.switchMap {
+    val activeTasks: LiveData<List<Task>> = currentList.switchMap {
         Log.d(TAG, "activeTasks: updated")
         dataSource.getActiveTasks(it)
     }
 
-    fun completedTasks(): LiveData<List<Task>> = currentList.switchMap {
+    val completedTasks: LiveData<List<Task>> = currentList.switchMap {
         Log.d(TAG, "completedTasks: updated")
         dataSource.getCompletedTasks(it)
     }

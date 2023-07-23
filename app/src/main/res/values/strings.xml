@@ -39,4 +39,6 @@
     <string name="date_time_display_format" translatable="false">%1$s/%2$s/%3$d - %4$s:%5$s</string>
     <string name="repeat_frequency">Repeat frequency</string>
     <string name="dont_repeat">None</string>
+    <string name="new_list">New list</string>
+    <string name="default_task_title">Untitled</string>
 </resources>

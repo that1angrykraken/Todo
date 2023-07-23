@@ -45,9 +45,9 @@ class PageFragment(private val pageIndex: Int) : Fragment(), TaskItemListener {
         adapter = TasksListAdapter(ArrayList(), this)
         binding.recyclerView.adapter = adapter
         when (pageIndex) {
-            2 -> viewModel.completedTasks().observe(requireActivity()) { updateUI(it) }
-            1 -> viewModel.activeTasks().observe(requireActivity()) { updateUI(it) }
-            0 -> viewModel.importantTasks().observe(requireActivity()) { updateUI(it) }
+            2 -> viewModel.completedTasks.observe(requireActivity()) { updateUI(it) }
+            1 -> viewModel.activeTasks.observe(requireActivity()) { updateUI(it) }
+            0 -> viewModel.importantTasks.observe(requireActivity()) { updateUI(it) }
         }
     }
 
@@ -97,7 +97,6 @@ class PageFragment(private val pageIndex: Int) : Fragment(), TaskItemListener {
         viewModel.upsert(task)
 
         Log.d(TAG, "onItemCompletedChanged: name: ${task.title} - desc ${task.desc}")
-//        showSnackbar()
     }
 
     override fun onItemImportantChanged(task: Task, position: Int) {
@@ -107,6 +106,5 @@ class PageFragment(private val pageIndex: Int) : Fragment(), TaskItemListener {
             0 -> viewModel.lastAction = 3
         }
         viewModel.upsert(task)
-//        showSnackbar()
     }
 }

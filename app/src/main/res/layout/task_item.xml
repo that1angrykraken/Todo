@@ -23,8 +23,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:paddingVertical="6dp">
+            android:layout_marginHorizontal="8dp"
+            android:paddingVertical="4dp">
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/checkboxCompleted"
@@ -33,21 +33,22 @@
                 android:checked="@={t.completed}"
                 app:buttonCompat="@drawable/completed_checkbox_selector"
                 app:buttonTint="?colorPrimary"
-                app:layout_constraintBottom_toTopOf="@id/chipDateTime"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textTitle"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{t.title}"
                 android:textAppearance="?textAppearanceTitleMedium"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toTopOf="@id/textDesc"
                 app:layout_constraintEnd_toStartOf="@+id/checkboxStar"
                 app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/checkboxCompleted" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textDesc"
@@ -57,6 +58,7 @@
                 android:maxLines="1"
                 android:text="@{t.desc}"
                 android:visibility="@{t.desc==null||t.desc.empty?View.GONE:View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@id/checkboxCompleted"
                 app:layout_constraintEnd_toStartOf="@+id/checkboxStar"
                 app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
                 app:layout_constraintTop_toBottomOf="@id/textTitle" />
@@ -65,14 +67,14 @@
                 android:id="@+id/chipDateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:checkable="false"
+                android:clickable="false"
                 android:visibility="@{t.year == 0 || t.completed ? View.GONE : View.VISIBLE}"
                 app:chipIcon="@drawable/round_repeat_48"
                 app:chipIconEnabled="@{t.repeat > 0}"
                 app:ensureMinTouchTargetSize="false"
                 app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
-                app:layout_constraintTop_toBottomOf="@id/textDesc" />
+                app:layout_constraintTop_toBottomOf="@id/checkboxCompleted" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/checkboxStar"
@@ -82,11 +84,11 @@
                 android:visibility="@{t.completed ? View.GONE : View.VISIBLE}"
                 app:buttonCompat="@drawable/important_checkbox_selector"
                 app:buttonTint="?colorPrimary"
-                app:layout_constraintBottom_toTopOf="@id/chipDateTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
 </layout>

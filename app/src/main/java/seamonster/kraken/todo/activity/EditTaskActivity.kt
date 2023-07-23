@@ -118,6 +118,7 @@ class EditTaskActivity : AppCompatActivity() {
     private fun setResultData(a: Int) {
         val action: Int = a
         val data = Intent()
+        if(binding.t!!.title.isEmpty()) binding.t!!.title = getString(R.string.default_task_title)
         data.putExtra("t", binding.t)
         data.putExtra("a", action)
         setResult(RESULT_OK, data)
