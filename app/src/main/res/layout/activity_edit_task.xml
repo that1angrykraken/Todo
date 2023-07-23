@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -35,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="8dp"
-                    android:text="@string/button_save"/>
+                    android:text="@string/button_save" />
 
             </com.google.android.material.appbar.MaterialToolbar>
 
@@ -96,10 +95,11 @@
                 android:layout_height="56dp"
                 android:layout_gravity="end"
                 android:layout_marginHorizontal="12dp"
+                android:buttonTint="?colorOnSurface"
                 android:checked="@={t.important}"
                 android:paddingHorizontal="12dp"
                 android:text="@string/mark_important"
-                android:textAppearance="?textAppearanceBodyMedium"
+                android:textAppearance="?textAppearanceBodyLarge"
                 app:buttonCompat="@drawable/important_checkbox_selector"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textDesc" />
@@ -129,14 +129,15 @@
                         android:layout_marginEnd="12dp"
                         android:padding="2dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/round_access_time_48" />
+                        android:src="@drawable/round_access_time_48"
+                        app:tint="?colorOnSurface" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/textSetDateTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/set_date_time"
-                        android:textAppearance="?textAppearanceBodyMedium"
+                        android:textAppearance="?textAppearanceBodyLarge"
                         android:visibility="@{t.year > 0 ? View.GONE : View.VISIBLE}" />
 
                     <com.google.android.material.chip.Chip
@@ -173,14 +174,15 @@
                         android:layout_marginEnd="12dp"
                         android:padding="2dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/round_repeat_48" />
+                        android:src="@drawable/round_repeat_48"
+                        app:tint="?colorOnSurface" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/swRepeat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sw_repeat"
-                        android:textAppearance="?textAppearanceBodyMedium" />
+                        android:textAppearance="?textAppearanceBodyLarge" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipRepeatFrq"

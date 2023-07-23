@@ -144,7 +144,7 @@ class EditTaskActivity : AppCompatActivity() {
             if (state == MaterialCheckBox.STATE_CHECKED) {
                 checkBox.buttonTintList = getColorStateList(R.color.yellow_star)
             } else {
-                checkBox.buttonTintList = getColorStateList(R.color.md_theme_light_primary)
+                checkBox.buttonTintList = getColorStateList(R.color.md_theme_dark_onSurface)
             }
         }
     }

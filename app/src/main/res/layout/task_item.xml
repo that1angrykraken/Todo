@@ -72,6 +72,7 @@
                 android:visibility="@{t.year == 0 || t.completed ? View.GONE : View.VISIBLE}"
                 app:chipIcon="@drawable/round_repeat_48"
                 app:chipIconEnabled="@{t.repeat > 0}"
+                app:chipIconTint="?colorOnSurface"
                 app:ensureMinTouchTargetSize="false"
                 app:layout_constraintStart_toEndOf="@id/checkboxCompleted"
                 app:layout_constraintTop_toBottomOf="@id/checkboxCompleted" />
