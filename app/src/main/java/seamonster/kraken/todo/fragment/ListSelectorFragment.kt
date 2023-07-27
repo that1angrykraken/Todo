@@ -23,7 +23,7 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel = ViewModelProvider(requireActivity())[AppViewModel::class.java]
         binding = FragmentListSelectorBinding.inflate(inflater, container, false)
         initLists()

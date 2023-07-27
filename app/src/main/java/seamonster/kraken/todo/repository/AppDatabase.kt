@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.model.TaskList
+import seamonster.kraken.todo.model.ListInfo
 
-@Database(entities = [Task::class, TaskList::class], version = 2, exportSchema = false)
+@Database(entities = [Task::class, ListInfo::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
 

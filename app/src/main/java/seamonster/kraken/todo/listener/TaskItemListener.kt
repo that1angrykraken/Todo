@@ -1,6 +1,5 @@
 package seamonster.kraken.todo.listener
 
-import com.google.android.material.checkbox.MaterialCheckBox
 import seamonster.kraken.todo.model.Task
 
 interface TaskItemListener {

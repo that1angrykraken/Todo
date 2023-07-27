@@ -4,15 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.ListItemBinding
 import seamonster.kraken.todo.listener.ListItemListener
-import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.model.TaskList
-import java.util.ArrayList
+import seamonster.kraken.todo.model.ListInfo
 
 class ListSelectorAdapter(
-    var data: List<TaskList>,
+    var data: List<ListInfo>,
     private val currentListId: Int,
     private val fragment: Fragment
 ) : RecyclerView.Adapter<ListSelectorAdapter.ViewHolder>() {

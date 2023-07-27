@@ -40,162 +40,170 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textTitle"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:endIconMode="clear_text"
-                app:hintEnabled="false"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:ellipsize="end"
-                    android:hint="@string/hint_title"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:text="@={t.title}"
-                    android:textAppearance="?textAppearanceTitleLarge" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textDesc"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:minHeight="48dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintEnabled="false"
-                app:layout_constraintTop_toBottomOf="@id/textTitle"
-                app:startIconDrawable="@drawable/round_notes_24">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:ellipsize="end"
+                        android:hint="@string/hint_title"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:text="@={t.title}"
+                        android:textAppearance="?textAppearanceTitleLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textDesc"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="@string/hint_description"
-                    android:inputType="textMultiLine"
-                    android:maxLines="8"
-                    android:padding="12dp"
-                    android:text="@={t.desc}"
-                    android:textAppearance="?textAppearanceBodyLarge" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/checkboxImportant"
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:layout_gravity="end"
-                android:layout_marginHorizontal="12dp"
-                android:buttonTint="?colorOnSurface"
-                android:checked="@={t.important}"
-                android:paddingHorizontal="12dp"
-                android:text="@string/mark_important"
-                android:textAppearance="?textAppearanceBodyLarge"
-                app:buttonCompat="@drawable/important_checkbox_selector"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textDesc" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardDateTime"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="0dp"
-                app:layout_constraintStart_toStartOf="@+id/textTitle"
-                app:layout_constraintTop_toBottomOf="@id/checkboxImportant"
-                app:strokeWidth="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:animateLayoutChanges="true"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="12dp">
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:hintEnabled="false"
+                    app:layout_constraintTop_toBottomOf="@id/textTitle"
+                    app:startIconDrawable="@drawable/round_notes_24">
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_marginEnd="12dp"
-                        android:padding="2dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/round_access_time_48"
-                        app:tint="?colorOnSurface" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/textSetDateTime"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/set_date_time"
-                        android:textAppearance="?textAppearanceBodyLarge"
-                        android:visibility="@{t.year > 0 ? View.GONE : View.VISIBLE}" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDateTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{t.year > 0 ? View.VISIBLE : View.GONE}"
-                        app:closeIconEnabled="true" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardRepeat"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:visibility="@{t.year>0?View.VISIBLE:View.GONE}"
-                app:cardCornerRadius="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardDateTime"
-                app:strokeWidth="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="12dp">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_marginEnd="12dp"
-                        android:padding="2dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/round_repeat_48"
-                        app:tint="?colorOnSurface" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/swRepeat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sw_repeat"
+                        android:hint="@string/hint_description"
+                        android:inputType="textMultiLine"
+                        android:maxLines="8"
+                        android:padding="12dp"
+                        android:text="@={t.desc}"
                         android:textAppearance="?textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipRepeatFrq"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:contentDescription="@string/repeat_frequency" />
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkboxImportant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_gravity="end"
+                    android:layout_marginHorizontal="12dp"
+                    android:buttonTint="?colorOnSurface"
+                    android:checked="@={t.important}"
+                    android:paddingHorizontal="12dp"
+                    android:text="@string/mark_important"
+                    android:textAppearance="?textAppearanceBodyLarge"
+                    app:buttonCompat="@drawable/important_checkbox_selector"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textDesc" />
 
-                </LinearLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="0dp"
+                    app:layout_constraintStart_toStartOf="@+id/textTitle"
+                    app:layout_constraintTop_toBottomOf="@id/checkboxImportant"
+                    app:strokeWidth="0dp">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="12dp"
+                            android:padding="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/round_access_time_48"
+                            app:tint="?colorOnSurface" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/textSetDateTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/set_date_time"
+                            android:textAppearance="?textAppearanceBodyLarge"
+                            android:visibility="@{t.year > 0 ? View.GONE : View.VISIBLE}" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDateTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="@{t.year > 0 ? View.VISIBLE : View.GONE}"
+                            app:closeIconEnabled="true" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardRepeat"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:visibility="@{t.year>0?View.VISIBLE:View.GONE}"
+                    app:cardCornerRadius="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardDateTime"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="12dp"
+                            android:padding="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/round_repeat_48"
+                            app:tint="?colorOnSurface" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/swRepeat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sw_repeat"
+                            android:textAppearance="?textAppearanceBodyLarge" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRepeatFrq"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:contentDescription="@string/repeat_frequency" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"

@@ -14,6 +14,6 @@ class PagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     }
 
     override fun createFragment(position: Int): Fragment {
-        return PageFragment(position)
+        return PageFragment.newInstance(position)
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -56,17 +57,15 @@ class EditTaskActivity : AppCompatActivity() {
     }
 
     private fun initButtonDateTime() {
-        binding.run {
-            cardDateTime.setOnClickListener {
-                showDatePicker()
-            }
-            chipDateTime.text = TextUtil.convertDateTime(binding.t!!.dateTime)
-            chipDateTime.setOnClickListener {
-                showDatePicker()
-            }
-            chipDateTime.setOnCloseIconClickListener {
-                binding.t!!.year = 0
-            }
+        binding.cardDateTime.setOnClickListener {
+            showDatePicker()
+        }
+        binding.chipDateTime.text = TextUtil.convertDateTime(this, binding.t!!.dateTime)
+        binding.chipDateTime.setOnClickListener {
+            showDatePicker()
+        }
+        binding.chipDateTime.setOnCloseIconClickListener {
+            binding.t!!.year = 0
         }
     }
 
@@ -85,7 +84,7 @@ class EditTaskActivity : AppCompatActivity() {
 
     private fun showTimePicker(calendar: Calendar) {
         val timePicker = MaterialTimePicker.Builder()
-            .setTitleText("Set time")
+            .setTitleText(getString(R.string.set_time))
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setInputMode(INPUT_MODE_KEYBOARD)
             .setHour(binding.t?.hour ?: calendar.get(Calendar.HOUR))
@@ -95,7 +94,7 @@ class EditTaskActivity : AppCompatActivity() {
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)
             calendar.set(Calendar.MINUTE, timePicker.minute)
             binding.t!!.dateTime = calendar
-            binding.chipDateTime.text = TextUtil.convertDateTime(calendar)
+            binding.chipDateTime.text = TextUtil.convertDateTime(this, calendar)
         }
         timePicker.show(supportFragmentManager, "TimePicker")
     }
@@ -118,7 +117,7 @@ class EditTaskActivity : AppCompatActivity() {
     private fun setResultData(a: Int) {
         val action: Int = a
         val data = Intent()
-        if(binding.t!!.title.isEmpty()) binding.t!!.title = getString(R.string.default_task_title)
+        if (binding.t!!.title.isEmpty()) binding.t!!.title = getString(R.string.default_task_title)
         data.putExtra("t", binding.t)
         data.putExtra("a", action)
         setResult(RESULT_OK, data)
@@ -140,11 +139,14 @@ class EditTaskActivity : AppCompatActivity() {
     }
 
     private fun initCheckboxImportant() {
+        val typedValue = TypedValue()
+        theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true)
+
         binding.checkboxImportant.addOnCheckedStateChangedListener { checkBox, state ->
             if (state == MaterialCheckBox.STATE_CHECKED) {
                 checkBox.buttonTintList = getColorStateList(R.color.yellow_star)
             } else {
-                checkBox.buttonTintList = getColorStateList(R.color.md_theme_dark_onSurface)
+                checkBox.buttonTintList = getColorStateList(typedValue.resourceId)
             }
         }
     }

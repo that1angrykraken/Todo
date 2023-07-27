@@ -1,10 +1,9 @@
 package seamonster.kraken.todo.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.checkbox.MaterialCheckBox
 import seamonster.kraken.todo.databinding.TaskItemBinding
 import seamonster.kraken.todo.listener.TaskItemListener
 import seamonster.kraken.todo.model.Task
@@ -22,7 +21,8 @@ class TasksListAdapter(var data: List<Task>, private val listener: TaskItemListe
         val task = data[holder.adapterPosition]
         with(holder.binding) {
             t = task
-            chipDateTime.text = TextUtil.convertDateTime(task.dateTime)
+            chipDateTime.text =
+                TextUtil.convertDateTime((listener as Fragment).requireContext(), task.dateTime)
             root.setOnClickListener { listener.onItemClick(task, holder.adapterPosition) }
             checkboxStar.setOnClickListener {
                 listener.onItemImportantChanged(task, holder.adapterPosition)

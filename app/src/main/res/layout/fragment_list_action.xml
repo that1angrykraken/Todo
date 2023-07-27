@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="12dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRenameList"
+            style="@style/ListActionTextButtonItem"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:textColor="@drawable/selector_button_state_color"
+            android:text="@string/rename_list"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDeleteList"
+            style="@style/ListActionTextButtonItem"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/delete_list" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDeleteCompletedTasks"
+            style="@style/ListActionTextButtonItem"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/delete_completed_tasks"/>
+
+    </LinearLayout>
+</layout>

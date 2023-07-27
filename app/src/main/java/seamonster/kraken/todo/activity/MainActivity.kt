@@ -13,9 +13,9 @@ import com.google.android.material.tabs.TabLayout
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.adapter.PagerAdapter
 import seamonster.kraken.todo.databinding.ActivityMainBinding
+import seamonster.kraken.todo.fragment.ListActionFragment
 import seamonster.kraken.todo.fragment.ListSelectorFragment
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.model.TaskList
 import seamonster.kraken.todo.viewmodel.AppViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -32,27 +32,37 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initDefaultList()
-
         initPager()
         initTabs()
         initFabAddTask()
+        initChipUpcomingFilter()
         initButtonSelectList()
+        initButtonListAction()
     }
 
-    private fun initDefaultList() {
-        val list = TaskList(1)
-        list.name = getString(R.string.my_tasks)
-        Log.d(TAG, "initDefaultList: name = ${list.name}")
-        viewModel.upsertList(list)
+    private fun initButtonListAction() {
+        binding.buttonListAction.setOnClickListener {
+            val bottomSheet = ListActionFragment()
+            bottomSheet.show(supportFragmentManager, ListActionFragment.TAG)
+        }
+    }
+
+    private fun initChipUpcomingFilter() {
+        binding.checkboxUpcomingFilter.setOnClickListener {
+            viewModel.lastAction = 1
+            viewModel.upcomingFilterEnabled.value = binding.checkboxUpcomingFilter.isChecked
+        }
     }
 
     private fun initButtonSelectList() {
         viewModel.currentList.observeForever { id ->
             val list = viewModel.lists.value?.findLast { it.id == id }
-            if (list != null) binding.buttonSelectList.text = list.name
+            if (list != null) {
+                binding.buttonSelectList.text = list.name
+                binding.checkboxUpcomingFilter.isChecked = false
+                viewModel.upcomingFilterEnabled.value = false
+            }
         }
-
         binding.buttonSelectList.setOnClickListener {
             val bottomSheet = ListSelectorFragment()
             bottomSheet.show(supportFragmentManager, ListSelectorFragment.TAG)
@@ -82,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     private fun initPager() {
         val adapter = PagerAdapter(supportFragmentManager, lifecycle)
         binding.viewPager2.adapter = adapter
+        binding.viewPager2.offscreenPageLimit = 1
         val listener = object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -96,18 +107,18 @@ class MainActivity : AppCompatActivity() {
     private fun showButtons() {
         binding.run {
             if (fabAddTask.visibility == View.GONE) {
-                buttonSelectList.maxWidth = (buttonSelectList.maxWidth - buttonUpcomingFilter.width)
+                buttonSelectList.maxWidth = (buttonSelectList.maxWidth - checkboxUpcomingFilter.width)
                 fabAddTask.visibility = View.VISIBLE
-                buttonUpcomingFilter.visibility = View.VISIBLE
+                checkboxUpcomingFilter.visibility = View.VISIBLE
             }
         }
     }
 
     private fun hideButtons() {
         binding.run {
-            buttonSelectList.maxWidth = (buttonSelectList.maxWidth + buttonUpcomingFilter.width)
+            buttonSelectList.maxWidth = (buttonSelectList.maxWidth + checkboxUpcomingFilter.width)
             fabAddTask.visibility = View.GONE
-            buttonUpcomingFilter.visibility = View.GONE
+            checkboxUpcomingFilter.visibility = View.GONE
         }
     }
 

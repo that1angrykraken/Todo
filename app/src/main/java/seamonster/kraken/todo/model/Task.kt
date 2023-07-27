@@ -8,7 +8,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.io.Serializable
 import java.util.Calendar
-import java.util.Locale
 
 @Entity("tasks")
 class Task(@PrimaryKey(autoGenerate = true) val id: Int = 0) : BaseObservable(), Serializable {

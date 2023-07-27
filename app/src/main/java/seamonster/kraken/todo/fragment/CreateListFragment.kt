@@ -4,17 +4,14 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.FragmentCreateListBinding
-import seamonster.kraken.todo.model.TaskList
+import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.viewmodel.AppViewModel
 
 class CreateListFragment : DialogFragment() {
@@ -33,7 +30,7 @@ class CreateListFragment : DialogFragment() {
         val dialog = Dialog(requireContext(), R.style.DialogTheme)
 
         binding.buttonDone.setOnClickListener {
-            val list = TaskList()
+            val list = ListInfo()
             list.name = binding.textListName.editText?.text.toString()
             rename(list)
             viewModel.upsertList(list)
@@ -45,7 +42,7 @@ class CreateListFragment : DialogFragment() {
         return dialog
     }
 
-    private fun rename(l: TaskList, count: Int = 1) {
+    private fun rename(l: ListInfo, count: Int = 1) {
         if(l.name.isEmpty()) l.name = getString(R.string.new_list)
         if (viewModel.lists.value!!.any { it.name == l.name }) {
             Log.d(TAG, "rename: exist")

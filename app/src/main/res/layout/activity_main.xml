@@ -58,14 +58,13 @@
             android:layout_gravity="bottom"
             android:animateLayoutChanges="true">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonUpcomingFilter"
-                style="?materialIconButtonStyle"
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkboxUpcomingFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/upcoming"
                 android:tooltipText="@string/upcoming"
-                app:icon="@drawable/round_upcoming_48" />
+                app:buttonCompat="@drawable/selector_upcoming_filter"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSelectList"
@@ -73,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxWidth="160dp"
+                android:maxWidth="190dp"
                 android:maxLines="1"
                 android:text="@string/my_tasks"
                 android:textColor="?colorOnSurfaceVariant"

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Todo" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
@@ -44,7 +44,6 @@
     </style>
 
     <style name="TextButtonItem" parent="Widget.Material3.Button.TextButton">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:paddingVertical">12dp</item>
         <item name="android:textColor">?colorOnSurface</item>
@@ -56,11 +55,19 @@
         <item name="iconTint">?colorOnSurface</item>
     </style>
 
-    <style name="ButtonItemTextAppearance" parent="TextAppearance.Material3.BodyLarge"/>
-
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_show_up</item>
         <item name="android:windowExitAnimation">@anim/dialog_dismiss</item>
+    </style>
+
+    <style name="ListActionTextButtonItem" parent="Widget.Material3.Button.TextButton">
+        <item name="android:paddingVertical">0dp</item>
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">@drawable/selector_button_state_color</item>
+        <item name="android:textAppearance">?textAppearanceBodyLarge</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="strokeWidth">0dp</item>
     </style>
 
 </resources>
