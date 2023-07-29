@@ -145,13 +145,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/set_date_time"
                             android:textAppearance="?textAppearanceBodyLarge"
-                            android:visibility="@{t.year > 0 ? View.GONE : View.VISIBLE}" />
+                            android:visibility="@{t.dateTime != null ? View.GONE : View.VISIBLE}" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipDateTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="@{t.year > 0 ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{t.dateTime != null ? View.VISIBLE : View.GONE}"
                             app:closeIconEnabled="true" />
 
                     </LinearLayout>
@@ -162,7 +162,7 @@
                     android:id="@+id/cardRepeat"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:visibility="@{t.year>0?View.VISIBLE:View.GONE}"
+                    android:visibility="@{t.dateTime != null ? View.VISIBLE : View.GONE}"
                     app:cardCornerRadius="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardDateTime"

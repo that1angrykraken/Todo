@@ -60,24 +60,25 @@ class EditTaskActivity : AppCompatActivity() {
         binding.cardDateTime.setOnClickListener {
             showDatePicker()
         }
-        binding.chipDateTime.text = TextUtil.convertDateTime(this, binding.t!!.dateTime)
+        if (binding.t?.dateTime != null)
+            binding.chipDateTime.text = TextUtil.convertDateTime(this, binding.t!!.dateTime!!)
         binding.chipDateTime.setOnClickListener {
             showDatePicker()
         }
         binding.chipDateTime.setOnCloseIconClickListener {
-            binding.t!!.year = 0
+            binding.t?.dateTime = null
         }
     }
 
     private fun showDatePicker() {
-        val calendar = if (binding.t!!.year > 0) binding.t!!.dateTime else Calendar.getInstance()
+        val calendar = binding.t?.dateTime ?: Calendar.getInstance()
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(getString(R.string.select_date))
-            .setSelection(calendar.timeInMillis)
+            .setSelection(calendar?.timeInMillis)
             .build()
         datePicker.addOnPositiveButtonClickListener {
-            calendar.timeInMillis = it
-            showTimePicker(calendar)
+            calendar?.timeInMillis = it
+            showTimePicker(calendar!!)
         }
         datePicker.show(supportFragmentManager, "DatePicker")
     }
@@ -87,8 +88,8 @@ class EditTaskActivity : AppCompatActivity() {
             .setTitleText(getString(R.string.set_time))
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setInputMode(INPUT_MODE_KEYBOARD)
-            .setHour(binding.t?.hour ?: calendar.get(Calendar.HOUR))
-            .setMinute(binding.t?.minute ?: calendar.get(Calendar.MINUTE))
+            .setHour(calendar.get(Calendar.HOUR))
+            .setMinute(calendar.get(Calendar.MINUTE))
             .build()
         timePicker.addOnPositiveButtonClickListener {
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)

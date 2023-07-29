@@ -69,7 +69,6 @@ class ListActionFragment : BottomSheetDialogFragment() {
                 .setTitle(getString(R.string.delete_dialog_title))
                 .setMessage(getString(R.string.delete_dialog_message))
                 .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ ->
-                    viewModel.lastAction = 1
                     viewModel.delete(*tasks!!.toTypedArray())
                     dismiss()
                 }

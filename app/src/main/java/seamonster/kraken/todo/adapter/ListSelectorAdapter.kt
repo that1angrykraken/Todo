@@ -27,7 +27,7 @@ class ListSelectorAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.run {
             l = data[holder.adapterPosition]
-            this.currentId = currentListId
+            currentId = currentListId
             root.setOnClickListener { (fragment as ListItemListener).onItemClicked(l!!.id) }
         }
     }

@@ -13,6 +13,7 @@ import seamonster.kraken.todo.repository.AppDatabase
 import seamonster.kraken.todo.repository.TaskDao
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.model.ListInfo
+import java.util.Calendar
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,28 +23,26 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dataSource: TaskDao
     val lists: LiveData<List<ListInfo>>
-    var lastAction: Int = 1
     val currentList = MutableLiveData(1)
     var upcomingFilterEnabled = MutableLiveData(false)
 
     init {
         val db = AppDatabase.getInstance(application)
         dataSource = db.taskDao()
-        upsertList(ListInfo(1))
         lists = dataSource.getAllLists()
     }
 
     val importantTasks: LiveData<List<Task>> = currentList.switchMap { listId ->
         upcomingFilterEnabled.switchMap {
             if (!it) dataSource.getTasks(listId, 0, 1)
-            else dataSource.getTasksSorted(listId, 0, 1)
+            else dataSource.getTasksSorted(listId, 0, Calendar.getInstance(), 1)
         }
     }
 
     val activeTasks: LiveData<List<Task>> = currentList.switchMap { listId ->
         upcomingFilterEnabled.switchMap {
             if (!it) dataSource.getTasks(listId, 0)
-            else dataSource.getTasksSorted(listId, 0)
+            else dataSource.getTasksSorted(listId, 0, Calendar.getInstance())
         }
     }
 

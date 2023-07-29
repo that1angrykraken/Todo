@@ -41,41 +41,6 @@ class Task(@PrimaryKey(autoGenerate = true) val id: Int = 0) : BaseObservable(),
         }
 
     @get:Bindable
-    var year: Int = 0
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.year)
-        }
-
-    @get:Bindable
-    var month: Int = 0
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.month)
-        }
-
-    @get:Bindable
-    var date: Int = 0
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.date)
-        }
-
-    @get:Bindable
-    var hour: Int? = null
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.hour)
-        }
-
-    @get:Bindable
-    var minute: Int? = null
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.minute)
-        }
-
-    @get:Bindable
     var repeat: Int = 0
         set(value) {
             field = value
@@ -89,22 +54,14 @@ class Task(@PrimaryKey(autoGenerate = true) val id: Int = 0) : BaseObservable(),
             notifyPropertyChanged(BR.completed)
         }
 
-    @get:Ignore
-    var dateTime: Calendar
-        get() {
-            val c = Calendar.getInstance()
-            c.set(year, month, date, hour ?: 0, minute ?: 0, 0)
-            return c
-        }
+    @get:Bindable
+    var dateTime: Calendar? = null
         set(value) {
-            year = value.get(Calendar.YEAR)
-            month = value.get(Calendar.MONTH)
-            date = value.get(Calendar.DATE)
-            hour = value.get(Calendar.HOUR_OF_DAY)
-            minute = value.get(Calendar.MINUTE)
+            field = value
+            notifyPropertyChanged(BR.dateTime)
         }
 
     @get:Ignore
     val uncompleted: Boolean
-        get() = Calendar.getInstance().after(dateTime)
+        get() = Calendar.getInstance().after(dateTime) && !completed
 }

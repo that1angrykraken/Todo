@@ -54,7 +54,6 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
 
     override fun onItemClicked(id: Int) {
         viewModel.setCurrentList(id)
-        viewModel.lastAction = 1
         dismiss()
     }
 }

@@ -15,6 +15,7 @@ import seamonster.kraken.todo.adapter.PagerAdapter
 import seamonster.kraken.todo.databinding.ActivityMainBinding
 import seamonster.kraken.todo.fragment.ListActionFragment
 import seamonster.kraken.todo.fragment.ListSelectorFragment
+import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.viewmodel.AppViewModel
 
@@ -32,12 +33,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initDefaultList()
         initPager()
         initTabs()
         initFabAddTask()
         initChipUpcomingFilter()
         initButtonSelectList()
         initButtonListAction()
+    }
+
+    private fun initDefaultList() {
+        val list = ListInfo(1)
+        list.name = getString(R.string.my_tasks)
+        viewModel.upsertList(list)
+        binding.list = list
     }
 
     private fun initButtonListAction() {
@@ -49,7 +58,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChipUpcomingFilter() {
         binding.checkboxUpcomingFilter.setOnClickListener {
-            viewModel.lastAction = 1
             viewModel.upcomingFilterEnabled.value = binding.checkboxUpcomingFilter.isChecked
         }
     }
@@ -57,11 +65,7 @@ class MainActivity : AppCompatActivity() {
     private fun initButtonSelectList() {
         viewModel.currentList.observeForever { id ->
             val list = viewModel.lists.value?.findLast { it.id == id }
-            if (list != null) {
-                binding.buttonSelectList.text = list.name
-                binding.checkboxUpcomingFilter.isChecked = false
-                viewModel.upcomingFilterEnabled.value = false
-            }
+            if (list != null) binding.list = list
         }
         binding.buttonSelectList.setOnClickListener {
             val bottomSheet = ListSelectorFragment()

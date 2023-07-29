@@ -20,13 +20,11 @@ import seamonster.kraken.todo.databinding.FragmentPageBinding
 import seamonster.kraken.todo.listener.TaskItemListener
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.viewmodel.AppViewModel
-import java.util.ArrayList
 
 class PageFragment : Fragment(), TaskItemListener {
     private lateinit var binding: FragmentPageBinding
     private lateinit var adapter: TasksListAdapter
     private lateinit var viewModel: AppViewModel
-    private var currentIndex: Int = -1
     private var pageIndex: Int? = 0
 
     companion object {
@@ -60,7 +58,7 @@ class PageFragment : Fragment(), TaskItemListener {
 
     private fun initRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = TasksListAdapter(ArrayList(), this)
+        adapter = TasksListAdapter(this)
         binding.recyclerView.adapter = adapter
         when (pageIndex) {
             2 -> viewModel.completedTasks.observeForever { updateUI(it) }
@@ -73,18 +71,7 @@ class PageFragment : Fragment(), TaskItemListener {
         Log.d(TAG, "onCreateView: tasks size = ${tasks.size}")
 
         binding.textView.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
-        val lastDataSize = adapter.data.size
         adapter.data = tasks
-        when (viewModel.lastAction) {
-            0 -> adapter.notifyDataSetChanged()
-            1 -> {
-                adapter.notifyItemRangeRemoved(0, lastDataSize)
-                adapter.notifyItemRangeInserted(0, tasks.size)
-            } // refresh the list
-            2 -> adapter.notifyItemChanged(currentIndex)
-            3 -> adapter.notifyItemRemoved(currentIndex)
-        }
-
     }
 
     private val launcherShowTaskDetail: ActivityResultLauncher<Intent> =
@@ -99,7 +86,6 @@ class PageFragment : Fragment(), TaskItemListener {
                         data.getSerializableExtra("t") as Task
 
                     val action = data.getIntExtra("a", -1)
-                    viewModel.lastAction = action
                     if (task != null) {
                         if (action == 3) viewModel.delete(task) else viewModel.upsert(task)
                     }
@@ -107,27 +93,19 @@ class PageFragment : Fragment(), TaskItemListener {
             }
         }
 
-    override fun onItemClick(task: Task, position: Int) {
-        currentIndex = position
+    override fun onItemClick(task: Task) {
         val intent = Intent(requireContext(), EditTaskActivity::class.java)
         intent.putExtra("t", task)
         launcherShowTaskDetail.launch(intent)
     }
 
-    override fun onItemCompletedChanged(task: Task, position: Int) {
-        currentIndex = position
-        viewModel.lastAction = 3
+    override fun onItemCompletedChanged(task: Task) {
         viewModel.upsert(task)
 
         Log.d(TAG, "onItemCompletedChanged: name: ${task.title} - desc ${task.desc}")
     }
 
-    override fun onItemImportantChanged(task: Task, position: Int) {
-        currentIndex = position
-        when (pageIndex) {
-            1, 2 -> viewModel.lastAction = -1
-            0 -> viewModel.lastAction = 3
-        }
+    override fun onItemImportantChanged(task: Task) {
         viewModel.upsert(task)
     }
 }

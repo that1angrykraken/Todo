@@ -69,5 +69,10 @@
         <item name="cornerRadius">0dp</item>
         <item name="strokeWidth">0dp</item>
     </style>
+    
+    <style name="TaskTitleUncompleted" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">?colorError</item>
+    </style>
 
 </resources>

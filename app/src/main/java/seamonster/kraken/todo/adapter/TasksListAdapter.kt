@@ -3,14 +3,23 @@ package seamonster.kraken.todo.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.TaskItemBinding
 import seamonster.kraken.todo.listener.TaskItemListener
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.util.TextUtil
 
-class TasksListAdapter(var data: List<Task>, private val listener: TaskItemListener) :
+class TasksListAdapter(private val listener: TaskItemListener) :
     RecyclerView.Adapter<TasksListAdapter.ViewHolder>() {
+
+    var data: List<Task> = ArrayList()
+        set(value) {
+            val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(CallBack(field, value))
+            field = value
+            result.dispatchUpdatesTo(this)
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = TaskItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,14 +31,13 @@ class TasksListAdapter(var data: List<Task>, private val listener: TaskItemListe
         with(holder.binding) {
             t = task
             chipDateTime.text =
-                TextUtil.convertDateTime((listener as Fragment).requireContext(), task.dateTime)
-            root.setOnClickListener { listener.onItemClick(task, holder.adapterPosition) }
-            checkboxStar.setOnClickListener {
-                listener.onItemImportantChanged(task, holder.adapterPosition)
+                TextUtil.convertDateTime((listener as Fragment).requireContext(), task.dateTime!!)
+            if (task.uncompleted) {
+                textTitle.setTextAppearance(R.style.TaskTitleUncompleted)
             }
-            checkboxCompleted.setOnClickListener {
-                listener.onItemCompletedChanged(task, holder.adapterPosition)
-            }
+            root.setOnClickListener { listener.onItemClick(task) }
+            checkboxStar.setOnClickListener { listener.onItemImportantChanged(task) }
+            checkboxCompleted.setOnClickListener { listener.onItemCompletedChanged(task) }
         }
     }
 
@@ -42,4 +50,23 @@ class TasksListAdapter(var data: List<Task>, private val listener: TaskItemListe
     }
 
     inner class ViewHolder(val binding: TaskItemBinding) : RecyclerView.ViewHolder(binding.root)
+}
+
+class CallBack(private val oldData: List<Task>, private val newData: List<Task>) :
+    DiffUtil.Callback() {
+    override fun getOldListSize(): Int {
+        return oldData.size
+    }
+
+    override fun getNewListSize(): Int {
+        return newData.size
+    }
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldData[oldItemPosition].id == newData[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldData[oldItemPosition] == newData[newItemPosition]
+    }
 }

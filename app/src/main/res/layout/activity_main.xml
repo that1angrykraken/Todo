@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="list"
+            type="seamonster.kraken.todo.model.ListInfo" />
+    </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
@@ -74,7 +80,7 @@
                 android:ellipsize="end"
                 android:maxWidth="190dp"
                 android:maxLines="1"
-                android:text="@string/my_tasks"
+                android:text="@{list.name}"
                 android:textColor="?colorOnSurfaceVariant"
                 android:tooltipText="@string/current_tasks_list"
                 app:icon="@drawable/round_list_alt_48" />

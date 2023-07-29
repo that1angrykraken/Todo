@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.model.ListInfo
+import java.util.Calendar
 
 @Dao
 interface TaskDao {
@@ -16,8 +17,15 @@ interface TaskDao {
     fun getTasks(listId: Int, completed: Int, vararg important: Int = intArrayOf(0, 1)): LiveData<List<Task>>
 
     @Query("SELECT * FROM tasks WHERE listId = :listId AND important IN (:important) AND completed = :completed " +
-            "AND datetime(year, month, date, hour, minute) >= date('now') ORDER BY year, month, date, hour, minute")
-    fun getTasksSorted(listId: Int, completed: Int, vararg important: Int = intArrayOf(0, 1)): LiveData<List<Task>>
+            "AND dateTime >= :currentDateTime ORDER BY dateTime")
+    fun getTasksSorted(
+        listId: Int,
+        completed: Int,
+        currentDateTime: Calendar,
+        vararg important: Int = intArrayOf(0, 1)): LiveData<List<Task>>
+
+    @Query("SELECT * FROM tasks WHERE completed = 0 AND dateTime >= :currentDateTime ORDER BY dateTime")
+    fun getTopMostUpcomingTask(currentDateTime: Calendar = Calendar.getInstance()): Task
 
     @Delete
     suspend fun delete(vararg tasks: Task)
