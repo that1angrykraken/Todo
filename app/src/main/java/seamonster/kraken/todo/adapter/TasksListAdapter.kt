@@ -30,11 +30,16 @@ class TasksListAdapter(private val listener: TaskItemListener) :
         val task = data[holder.adapterPosition]
         with(holder.binding) {
             t = task
-            chipDateTime.text =
-                AppUtil.convertDateTime((listener as Fragment).requireContext(), task.dateTime!!)
+            if (task.dateTime != null) {
+                chipDateTime.text =
+                    AppUtil.convertDateTime(
+                        (listener as Fragment).requireContext(),
+                        task.dateTime!!
+                    )
+            }
             if (task.uncompleted) {
                 textTitle.setTextAppearance(R.style.TaskTitleUncompleted)
-            }else{
+            } else {
                 textTitle.setTextAppearance(R.style.TaskTitle)
             }
             root.setOnClickListener { listener.onItemClick(task) }

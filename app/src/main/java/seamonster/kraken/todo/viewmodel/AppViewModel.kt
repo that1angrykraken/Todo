@@ -51,7 +51,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         dataSource.getTasks(listId, 1)
     }
 
-
     fun setCurrentList(id: Int) {
         currentList.value = id
         Log.d(TAG, "setCurrentList: ${currentList.value}")
