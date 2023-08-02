@@ -24,8 +24,8 @@ interface TaskDao {
         currentDateTime: Calendar,
         vararg important: Int = intArrayOf(0, 1)): LiveData<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE completed = 0 AND dateTime >= :currentDateTime ORDER BY dateTime")
-    fun getTopMostUpcomingTask(currentDateTime: Calendar = Calendar.getInstance()): Task
+    @Query("SELECT * FROM tasks WHERE completed = 0 AND dateTime >= :currentDateTime ORDER BY dateTime LIMIT 1")
+    fun getUpcomingTask(currentDateTime: Calendar = Calendar.getInstance()): Task?
 
     @Delete
     suspend fun delete(vararg tasks: Task)

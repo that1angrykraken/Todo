@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import seamonster.kraken.todo.R
@@ -19,6 +20,7 @@ import seamonster.kraken.todo.adapter.TasksListAdapter
 import seamonster.kraken.todo.databinding.FragmentPageBinding
 import seamonster.kraken.todo.listener.TaskItemListener
 import seamonster.kraken.todo.model.Task
+import seamonster.kraken.todo.util.ScheduleTaskService
 import seamonster.kraken.todo.viewmodel.AppViewModel
 
 class PageFragment : Fragment(), TaskItemListener {
@@ -68,7 +70,13 @@ class PageFragment : Fragment(), TaskItemListener {
     }
 
     private fun updateUI(tasks: List<Task>) {
-        Log.d(TAG, "onCreateView: tasks size = ${tasks.size}")
+        Log.d(TAG, "updateUI: pageIndex = $pageIndex - tasks size = ${tasks.size}")
+
+        if (viewModel.lastAction != 1) {
+            val intent = Intent(requireActivity(), ScheduleTaskService::class.java)
+            ContextCompat.startForegroundService(requireActivity(), intent)
+            viewModel.lastAction = 1
+        }
 
         binding.textView.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
         adapter.data = tasks
@@ -83,10 +91,11 @@ class PageFragment : Fragment(), TaskItemListener {
                     val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                         data.getSerializableExtra("t", Task::class.java) // API 33+
                     else
-                        data.getSerializableExtra("t") as Task
+                        @Suppress("DEPRECATION") data.getSerializableExtra("t") as Task
 
                     val action = data.getIntExtra("a", -1)
                     if (task != null) {
+                        viewModel.lastAction = action
                         if (action == 3) viewModel.delete(task) else viewModel.upsert(task)
                     }
                 }
@@ -100,12 +109,13 @@ class PageFragment : Fragment(), TaskItemListener {
     }
 
     override fun onItemCompletedChanged(task: Task) {
+        viewModel.lastAction = 0
         viewModel.upsert(task)
-
         Log.d(TAG, "onItemCompletedChanged: name: ${task.title} - desc ${task.desc}")
     }
 
     override fun onItemImportantChanged(task: Task) {
+        viewModel.lastAction = 1
         viewModel.upsert(task)
     }
 }

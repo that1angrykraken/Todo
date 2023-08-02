@@ -25,6 +25,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     val lists: LiveData<List<ListInfo>>
     val currentList = MutableLiveData(1)
     var upcomingFilterEnabled = MutableLiveData(false)
+    var lastAction = 1
 
     init {
         val db = AppDatabase.getInstance(application)

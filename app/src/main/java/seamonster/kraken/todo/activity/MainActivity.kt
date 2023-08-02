@@ -1,5 +1,6 @@
 package seamonster.kraken.todo.activity
 
+import android.Manifest
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.adapter.PagerAdapter
@@ -42,6 +44,30 @@ class MainActivity : AppCompatActivity() {
         initButtonListAction()
     }
 
+    override fun onStart() {
+        super.onStart()
+        requestPermission()
+    }
+
+    private fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        if (!it) {
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.notification_permission_require_title))
+                .setMessage(getString(R.string.notification_permission_require_message))
+                .setNeutralButton(getString(R.string.later)) { _, _ -> }
+                .setNegativeButton(getString(R.string.no)) { _, _ -> }
+                .setPositiveButton(getString(R.string.yes)) { _, _ -> requestPermission()}
+            dialog.show()
+        }
+    }
+
     private fun initDefaultList() {
         val list = ListInfo(1)
         list.name = getString(R.string.my_tasks)
@@ -58,6 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChipUpcomingFilter() {
         binding.checkboxUpcomingFilter.setOnClickListener {
+            viewModel.lastAction = 1
             viewModel.upcomingFilterEnabled.value = binding.checkboxUpcomingFilter.isChecked
         }
     }
@@ -65,7 +92,10 @@ class MainActivity : AppCompatActivity() {
     private fun initButtonSelectList() {
         viewModel.currentList.observeForever { id ->
             val list = viewModel.lists.value?.findLast { it.id == id }
-            if (list != null) binding.list = list
+            if (list != null) {
+                viewModel.lastAction = 1
+                binding.list = list
+            }
         }
         binding.buttonSelectList.setOnClickListener {
             val bottomSheet = ListSelectorFragment()
@@ -88,8 +118,11 @@ class MainActivity : AppCompatActivity() {
                 val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                     data.getSerializableExtra("t", Task::class.java)
                 else
-                    data.getSerializableExtra("t") as Task
-                if (task != null) viewModel.upsert(task)
+                    @Suppress("DEPRECATION") data.getSerializableExtra("t") as Task
+                if (task != null) {
+                    viewModel.lastAction = 0
+                    viewModel.upsert(task)
+                }
             }
         }
 
@@ -111,7 +144,8 @@ class MainActivity : AppCompatActivity() {
     private fun showButtons() {
         binding.run {
             if (fabAddTask.visibility == View.GONE) {
-                buttonSelectList.maxWidth = (buttonSelectList.maxWidth - checkboxUpcomingFilter.width)
+                buttonSelectList.maxWidth =
+                    (buttonSelectList.maxWidth - checkboxUpcomingFilter.width)
                 fabAddTask.visibility = View.VISIBLE
                 checkboxUpcomingFilter.visibility = View.VISIBLE
             }

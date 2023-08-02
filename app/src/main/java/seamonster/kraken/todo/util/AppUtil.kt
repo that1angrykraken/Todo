@@ -1,10 +1,13 @@
 package seamonster.kraken.todo.util
 
 import android.content.Context
+import android.os.Build
+import android.os.Bundle
 import seamonster.kraken.todo.R
+import seamonster.kraken.todo.model.Task
 import java.util.Calendar
 
-class TextUtil {
+class AppUtil {
     companion object {
 
         fun convertDateTime(context: Context, calendar: Calendar): String {
@@ -30,6 +33,13 @@ class TextUtil {
             val month = String.format("%02d", calendar.get(Calendar.MONTH) + 1)
             val year = calendar.get(Calendar.YEAR)
             return "$date/$month/$year"
+        }
+
+        fun getTaskFromBundle(bundle: Bundle?): Task?{
+            if (bundle == null) return null
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                bundle.getSerializable("task", Task::class.java)
+            else @Suppress("DEPRECATION") bundle.getSerializable("task") as Task
         }
     }
 }

@@ -23,7 +23,7 @@
     <string name="mark_uncompleted">Mark uncompleted</string>
     <string name="my_tasks">My tasks</string>
     <string name="lists">Lists</string>
-    <string name="create_new_list">Create new list</string>
+    <string name="edit_list">Edit list</string>
     <string name="select_a_list">Select a list</string>
     <string name="list_action">List action</string>
     <string name="button_done">Done</string>
@@ -50,4 +50,13 @@
     <string name="delete_dialog_message">All completed tasks in current list will be permanently delete.</string>
     <string name="delete_list_dialog_title">Delete current list?</string>
     <string name="delete_list_dialog_message">This list and all related tasks will be delete permanently.</string>
+    <string name="CHANNEL_ID" translatable="false">MAIN_CHANNEL</string>
+    <string name="notification_channel_name">Main channel</string>
+    <string name="invalid_list_name">List name is empty or already exist.</string>
+    <string name="create_new_list">Create new list</string>
+    <string name="notification_permission_require_message">This app will notify you when your tasks are due. Do you want to try again?\n(You can enable notifications later in Settings)</string>
+    <string name="notification_permission_require_title">Notifications permission needed!</string>
+    <string name="later">Later</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

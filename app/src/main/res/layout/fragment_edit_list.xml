@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="list"
+            type="seamonster.kraken.todo.model.ListInfo" />
+    </data>
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
@@ -12,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/round_close_48"
-            app:title="@string/create_new_list">
+            app:title="@string/edit_list">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonDone"
@@ -43,8 +49,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/enter_list_title"
-                android:inputType="textMultiLine"
-                android:maxLines="3"
+                android:inputType="text"
+                android:maxLines="1"
+                android:text="@={list.name}"
                 android:textAppearance="?textAppearanceBodyLarge"/>
         </com.google.android.material.textfield.TextInputLayout>
 

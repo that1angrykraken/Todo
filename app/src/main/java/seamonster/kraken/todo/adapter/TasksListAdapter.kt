@@ -9,7 +9,7 @@ import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.TaskItemBinding
 import seamonster.kraken.todo.listener.TaskItemListener
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.util.TextUtil
+import seamonster.kraken.todo.util.AppUtil
 
 class TasksListAdapter(private val listener: TaskItemListener) :
     RecyclerView.Adapter<TasksListAdapter.ViewHolder>() {
@@ -31,9 +31,11 @@ class TasksListAdapter(private val listener: TaskItemListener) :
         with(holder.binding) {
             t = task
             chipDateTime.text =
-                TextUtil.convertDateTime((listener as Fragment).requireContext(), task.dateTime!!)
+                AppUtil.convertDateTime((listener as Fragment).requireContext(), task.dateTime!!)
             if (task.uncompleted) {
                 textTitle.setTextAppearance(R.style.TaskTitleUncompleted)
+            }else{
+                textTitle.setTextAppearance(R.style.TaskTitle)
             }
             root.setOnClickListener { listener.onItemClick(task) }
             checkboxStar.setOnClickListener { listener.onItemImportantChanged(task) }

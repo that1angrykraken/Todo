@@ -37,7 +37,13 @@ class ListActionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initButtonRenameList() {
-        binding.buttonRenameList.isEnabled = viewModel.currentList.value!! > 1
+        val id = viewModel.currentList.value!!
+        binding.buttonRenameList.isEnabled = id > 1
+        binding.buttonRenameList.setOnClickListener {
+            val dialog = EditListFragment()
+            dialog.list = viewModel.lists.value?.find { it.id == id }!!
+            dialog.show(parentFragmentManager, EditListFragment.TAG)
+        }
     }
 
     private fun initButtonDeleteList() {

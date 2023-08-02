@@ -15,7 +15,7 @@ import com.google.android.material.timepicker.TimeFormat
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.ActivityEditTaskBinding
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.util.TextUtil
+import seamonster.kraken.todo.util.AppUtil
 import java.util.Calendar
 
 class EditTaskActivity : AppCompatActivity() {
@@ -61,7 +61,7 @@ class EditTaskActivity : AppCompatActivity() {
             showDatePicker()
         }
         if (binding.t?.dateTime != null)
-            binding.chipDateTime.text = TextUtil.convertDateTime(this, binding.t!!.dateTime!!)
+            binding.chipDateTime.text = AppUtil.convertDateTime(this, binding.t!!.dateTime!!)
         binding.chipDateTime.setOnClickListener {
             showDatePicker()
         }
@@ -95,7 +95,7 @@ class EditTaskActivity : AppCompatActivity() {
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)
             calendar.set(Calendar.MINUTE, timePicker.minute)
             binding.t!!.dateTime = calendar
-            binding.chipDateTime.text = TextUtil.convertDateTime(this, calendar)
+            binding.chipDateTime.text = AppUtil.convertDateTime(this, calendar)
         }
         timePicker.show(supportFragmentManager, "TimePicker")
     }
@@ -111,7 +111,7 @@ class EditTaskActivity : AppCompatActivity() {
         val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             intent.getSerializableExtra("t", Task::class.java)!!
         else
-            intent.getSerializableExtra("t") as Task
+            @Suppress("DEPRECATION") intent.getSerializableExtra("t") as Task
         binding.t = task
     }
 

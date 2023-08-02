@@ -28,7 +28,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.EditTaskActivity"/>
-        <activity android:name=".activity.MarkCompletedActivity"/>
+
+        <receiver android:name=".util.NotificationReceiver"/>
+        <service android:name=".util.ScheduleTaskService"/>
+        <service android:name=".util.MarkCompletedService"/>
     </application>
 
 </manifest>
