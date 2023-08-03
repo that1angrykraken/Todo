@@ -1,4 +1,4 @@
-package seamonster.kraken.todo.repository
+package seamonster.kraken.todo.persistence
 
 import android.content.Context
 import androidx.room.Database

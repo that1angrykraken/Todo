@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import seamonster.kraken.todo.adapter.ListSelectorAdapter
 import seamonster.kraken.todo.databinding.FragmentListSelectorBinding
 import seamonster.kraken.todo.listener.ListItemListener
+import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.viewmodel.AppViewModel
 import java.util.ArrayList
 
@@ -31,7 +32,7 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
     }
 
     private fun initLists() {
-        val adapter = ListSelectorAdapter(ArrayList(), viewModel.currentList.value!!, this)
+        val adapter = ListSelectorAdapter(ArrayList(), viewModel.currentList.value!!.id, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
         viewModel.lists.observeForever {
@@ -51,8 +52,8 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
         const val TAG = "ListSelectorFragment"
     }
 
-    override fun onItemClicked(id: Int) {
-        viewModel.setCurrentList(id)
+    override fun onItemClicked(list: ListInfo) {
+        viewModel.setCurrentList(list)
         dismiss()
     }
 }

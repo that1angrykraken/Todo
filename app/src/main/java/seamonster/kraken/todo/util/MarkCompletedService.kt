@@ -12,24 +12,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.repository.AppDatabase
+import seamonster.kraken.todo.persistence.AppDatabase
 
 class MarkCompletedService : Service() {
 
     companion object {
         const val TAG = "MarkCompletedService"
         const val NOTIFICATION_ID = 10001111
+        const val CHANNEL_ID = "BACKGROUND_SERVICE"
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         startForeground(NOTIFICATION_ID, notification())
         val task = AppUtil.getTaskFromBundle(intent.extras)
-        val notificationId = intent.extras?.getInt("id")
-        if (task != null && notificationId != null) {
+        if (task != null) {
             updateTask(task.also { it.completed = true })
-            cancelNotification(notificationId)
+            cancelNotification(task.id)
         }
-        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
         return START_NOT_STICKY
     }
 
@@ -48,15 +48,15 @@ class MarkCompletedService : Service() {
 
     private fun notification(): Notification {
         val channel = NotificationChannel(
-            ScheduleTaskService.CHANNEL_ID,
+            CHANNEL_ID,
             "BackgroundService",
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_DEFAULT
         )
         with(NotificationManagerCompat.from(this)) {
             createNotificationChannel(channel)
         }
 
-        val builder = NotificationCompat.Builder(this, ScheduleTaskService.CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Tasks")
             .setContentText("Background service is running")
 

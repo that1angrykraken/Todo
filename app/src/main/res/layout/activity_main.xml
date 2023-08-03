@@ -84,6 +84,7 @@
                 android:text="@{list.name}"
                 android:textColor="?colorOnSurfaceVariant"
                 android:tooltipText="@string/current_tasks_list"
+                android:contentDescription="@string/current_tasks_list"
                 app:icon="@drawable/round_list_alt_48" />
 
             <com.google.android.material.button.MaterialButton

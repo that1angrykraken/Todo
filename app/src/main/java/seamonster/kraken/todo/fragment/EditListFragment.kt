@@ -41,7 +41,7 @@ class EditListFragment : DialogFragment() {
             }
         }
         binding.toolbar.setNavigationOnClickListener { dialog.cancel() }
-        dialog.window?.setWindowAnimations(R.style.DialogAnimation)
+        dialog.window?.setWindowAnimations(R.style.DialogBottomUpAnimation)
         dialog.setContentView(binding.root)
         return dialog
     }

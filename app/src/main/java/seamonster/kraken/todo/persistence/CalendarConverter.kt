@@ -1,4 +1,4 @@
-package seamonster.kraken.todo.repository
+package seamonster.kraken.todo.persistence
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter

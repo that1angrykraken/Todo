@@ -28,7 +28,7 @@ class ListSelectorAdapter(
         holder.binding.run {
             l = data[holder.adapterPosition]
             currentId = currentListId
-            root.setOnClickListener { (fragment as ListItemListener).onItemClicked(l!!.id) }
+            root.setOnClickListener { (fragment as ListItemListener).onItemClicked(l!!) }
         }
     }
 }

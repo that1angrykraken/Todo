@@ -9,8 +9,8 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import seamonster.kraken.todo.repository.AppDatabase
-import seamonster.kraken.todo.repository.TaskDao
+import seamonster.kraken.todo.persistence.AppDatabase
+import seamonster.kraken.todo.persistence.TaskDao
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.model.ListInfo
 import java.util.Calendar
@@ -23,9 +23,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dataSource: TaskDao
     val lists: LiveData<List<ListInfo>>
-    val currentList = MutableLiveData(1)
+    val currentList = MutableLiveData<ListInfo>()
     var upcomingFilterEnabled = MutableLiveData(false)
-    var lastAction = 1
 
     init {
         val db = AppDatabase.getInstance(application)
@@ -33,33 +32,38 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         lists = dataSource.getAllLists()
     }
 
-    val importantTasks: LiveData<List<Task>> = currentList.switchMap { listId ->
+    val allTasks: LiveData<List<Task>> = dataSource.getAll()
+
+    val importantTasks: LiveData<List<Task>> = currentList.switchMap { list ->
         upcomingFilterEnabled.switchMap {
-            if (!it) dataSource.getTasks(listId, 0, 1)
-            else dataSource.getTasksSorted(listId, 0, Calendar.getInstance(), 1)
+            val currentDateTime =
+                Calendar.getInstance().apply { timeInMillis = System.currentTimeMillis() }
+            if (!it) dataSource.getTasks(list.id, 0, 1)
+            else dataSource.getTasksSorted(list.id, 0, currentDateTime, 1)
         }
     }
 
-    val activeTasks: LiveData<List<Task>> = currentList.switchMap { listId ->
+    val activeTasks: LiveData<List<Task>> = currentList.switchMap { list ->
         upcomingFilterEnabled.switchMap {
-            if (!it) dataSource.getTasks(listId, 0)
-            else dataSource.getTasksSorted(listId, 0, Calendar.getInstance())
+            val currentDateTime =
+                Calendar.getInstance().apply { timeInMillis = System.currentTimeMillis() }
+            if (!it) dataSource.getTasks(list.id, 0)
+            else dataSource.getTasksSorted(list.id, 0, currentDateTime)
         }
     }
 
-    val completedTasks: LiveData<List<Task>> = currentList.switchMap { listId ->
-        dataSource.getTasks(listId, 1)
+    val completedTasks: LiveData<List<Task>> = currentList.switchMap { list ->
+        dataSource.getTasks(list.id, 1)
     }
 
-    fun setCurrentList(id: Int) {
-        currentList.value = id
-        Log.d(TAG, "setCurrentList: ${currentList.value}")
+    fun setCurrentList(list: ListInfo) {
+        currentList.value = list
+        Log.d(TAG, "setCurrentList: ${currentList.value?.id}")
     }
 
     fun upsert(task: Task) = viewModelScope.launch(Dispatchers.IO) {
-        task.listId = currentList.value!!
+        task.listId = currentList.value!!.id
         dataSource.upsert(task)
-        Log.d(TAG, "upsert: task upserted at ${task.listId}")
     }
 
     fun delete(vararg tasks: Task) = viewModelScope.launch(Dispatchers.IO) {
@@ -68,7 +72,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun upsertList(list: ListInfo) = viewModelScope.launch(Dispatchers.IO) {
         dataSource.upsertList(list)
-        Log.d(TAG, "upsertList: updated: id = ${list.id} , name = ${list.name}")
     }
 
     fun deleteList(list: ListInfo) = viewModelScope.launch(Dispatchers.IO) {

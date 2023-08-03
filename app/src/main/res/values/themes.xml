@@ -35,8 +35,6 @@
 
     <style name="Theme.Todo" parent="Base.Theme.Todo" />
 
-    <style name="Theme.Todo.Dialog" parent="Theme.AppCompat.Dialog.Alert" />
-
     <style name="DialogTheme" parent="Base.Theme.Todo">
         <item name="windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
@@ -55,7 +53,7 @@
         <item name="iconTint">?colorOnSurface</item>
     </style>
 
-    <style name="DialogAnimation">
+    <style name="DialogBottomUpAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_show_up</item>
         <item name="android:windowExitAnimation">@anim/dialog_dismiss</item>
     </style>

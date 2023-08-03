@@ -32,7 +32,7 @@ class TasksListAdapter(private val listener: TaskItemListener) :
             t = task
             if (task.dateTime != null) {
                 chipDateTime.text =
-                    AppUtil.convertDateTime(
+                    AppUtil().convertDateTime(
                         (listener as Fragment).requireContext(),
                         task.dateTime!!
                     )

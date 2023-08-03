@@ -37,25 +37,26 @@ class ListActionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initButtonRenameList() {
-        val id = viewModel.currentList.value!!
+        val id = viewModel.currentList.value!!.id
         binding.buttonRenameList.isEnabled = id > 1
         binding.buttonRenameList.setOnClickListener {
             val dialog = EditListFragment()
-            dialog.list = viewModel.lists.value?.find { it.id == id }!!
+            dialog.list = viewModel.currentList.value!!
             dialog.show(parentFragmentManager, EditListFragment.TAG)
         }
     }
 
     private fun initButtonDeleteList() {
-        binding.buttonDeleteList.isEnabled = viewModel.currentList.value!! > 1
+        val id = viewModel.currentList.value!!.id
+        binding.buttonDeleteList.isEnabled = id > 1
         // show confirmation dialog
         binding.buttonDeleteList.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.delete_list_dialog_title))
                 .setMessage(getString(R.string.delete_list_dialog_message))
                 .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ ->
-                    viewModel.deleteList(ListInfo(viewModel.currentList.value!!))
-                    viewModel.setCurrentList(1)
+                    viewModel.deleteList(ListInfo(id))
+                    viewModel.setCurrentList(ListInfo(1))
                     dismiss()
                 }
                 .setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ ->

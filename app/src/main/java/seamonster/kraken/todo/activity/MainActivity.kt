@@ -1,11 +1,9 @@
 package seamonster.kraken.todo.activity
 
 import android.Manifest
-import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -15,10 +13,12 @@ import com.google.android.material.tabs.TabLayout
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.adapter.PagerAdapter
 import seamonster.kraken.todo.databinding.ActivityMainBinding
+import seamonster.kraken.todo.fragment.EditTaskFragment
 import seamonster.kraken.todo.fragment.ListActionFragment
 import seamonster.kraken.todo.fragment.ListSelectorFragment
 import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.model.Task
+import seamonster.kraken.todo.util.AppUtil
 import seamonster.kraken.todo.viewmodel.AppViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -36,12 +36,35 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initDefaultList()
-        initPager()
         initTabs()
+        initPager()
         initFabAddTask()
         initChipUpcomingFilter()
         initButtonSelectList()
         initButtonListAction()
+        initScheduler()
+        showTaskFromNotification()
+    }
+
+    private fun initDefaultList() {
+        val list = ListInfo(1).apply { name = getString(R.string.my_tasks) }
+        viewModel.upsertList(list)
+        viewModel.setCurrentList(list)
+    }
+
+    private fun showTaskFromNotification() {
+        val task = AppUtil.getTaskFromBundle(intent.extras)
+        if (task != null) {
+            showEditTaskDialog(task)
+        }
+    }
+
+    private fun initScheduler() {
+        viewModel.allTasks.observeForever { tasks ->
+            if (tasks.isNotEmpty()){
+                AppUtil().scheduleNextTask(this, Task(0))
+            }
+        }
     }
 
     override fun onStart() {
@@ -50,8 +73,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)){
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -61,18 +87,9 @@ class MainActivity : AppCompatActivity() {
             val dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.notification_permission_require_title))
                 .setMessage(getString(R.string.notification_permission_require_message))
-                .setNeutralButton(getString(R.string.later)) { _, _ -> }
-                .setNegativeButton(getString(R.string.no)) { _, _ -> }
-                .setPositiveButton(getString(R.string.yes)) { _, _ -> requestPermission()}
+                .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ -> }
             dialog.show()
         }
-    }
-
-    private fun initDefaultList() {
-        val list = ListInfo(1)
-        list.name = getString(R.string.my_tasks)
-        viewModel.upsertList(list)
-        binding.list = list
     }
 
     private fun initButtonListAction() {
@@ -84,18 +101,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChipUpcomingFilter() {
         binding.checkboxUpcomingFilter.setOnClickListener {
-            viewModel.lastAction = 1
             viewModel.upcomingFilterEnabled.value = binding.checkboxUpcomingFilter.isChecked
         }
     }
 
     private fun initButtonSelectList() {
-        viewModel.currentList.observeForever { id ->
-            val list = viewModel.lists.value?.findLast { it.id == id }
-            if (list != null) {
-                viewModel.lastAction = 1
-                binding.list = list
-            }
+        viewModel.currentList.observeForever { list ->
+            binding.list = list
         }
         binding.buttonSelectList.setOnClickListener {
             val bottomSheet = ListSelectorFragment()
@@ -104,32 +116,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFabAddTask() {
-        binding.fabAddTask.setOnClickListener {
-            val intent = Intent(this, EditTaskActivity::class.java)
-            intent.putExtra("t", Task())
-            launcherAddTask.launch(intent)
-        }
+        binding.fabAddTask.setOnClickListener { showEditTaskDialog() }
     }
 
-    private val launcherAddTask =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            val data = it.data
-            if (data != null) {
-                val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    data.getSerializableExtra("t", Task::class.java)
-                else
-                    @Suppress("DEPRECATION") data.getSerializableExtra("t") as Task
-                if (task != null) {
-                    viewModel.lastAction = 0
-                    viewModel.upsert(task)
-                }
-            }
-        }
+    private fun showEditTaskDialog(task: Task = Task()) {
+        val dialog = EditTaskFragment()
+        dialog.task = task
+        dialog.show(supportFragmentManager, EditTaskFragment.TAG)
+    }
 
     private fun initPager() {
         val adapter = PagerAdapter(supportFragmentManager, lifecycle)
         binding.viewPager2.adapter = adapter
-        binding.viewPager2.offscreenPageLimit = 1
+        binding.viewPager2.offscreenPageLimit = 2
         val listener = object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -139,6 +138,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.viewPager2.registerOnPageChangeCallback(listener)
+        binding.viewPager2.currentItem = 1
     }
 
     private fun showButtons() {
@@ -181,7 +181,6 @@ class MainActivity : AppCompatActivity() {
             }
             addOnTabSelectedListener(listener)
 
-            selectTab(getTabAt(1))
         }
     }
 

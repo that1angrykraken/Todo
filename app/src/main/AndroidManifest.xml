@@ -27,10 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.EditTaskActivity"/>
-
-        <receiver android:name=".util.NotificationReceiver"/>
-        <service android:name=".util.ScheduleTaskService"/>
         <service android:name=".util.MarkCompletedService"/>
     </application>
 

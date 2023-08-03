@@ -1,5 +1,7 @@
 package seamonster.kraken.todo.listener
 
+import seamonster.kraken.todo.model.ListInfo
+
 interface ListItemListener {
-    fun onItemClicked(id: Int)
+    fun onItemClicked(list: ListInfo)
 }
