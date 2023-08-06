@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import seamonster.kraken.todo.adapter.ListSelectorAdapter
+import seamonster.kraken.todo.adapter.ListAdapter
 import seamonster.kraken.todo.databinding.FragmentListSelectorBinding
 import seamonster.kraken.todo.listener.ListItemListener
 import seamonster.kraken.todo.model.ListInfo
@@ -32,7 +32,7 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
     }
 
     private fun initLists() {
-        val adapter = ListSelectorAdapter(ArrayList(), viewModel.currentList.value!!.id, this)
+        val adapter = ListAdapter(ArrayList(), viewModel.currentList.value!!.id, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
         viewModel.lists.observeForever {

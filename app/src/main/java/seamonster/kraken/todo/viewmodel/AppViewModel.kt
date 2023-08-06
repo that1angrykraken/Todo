@@ -24,6 +24,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val dataSource: TaskDao
     val lists: LiveData<List<ListInfo>>
     val currentList = MutableLiveData<ListInfo>()
+//    val selectedItems = MutableLiveData(ArrayList<Task>())
     var upcomingFilterEnabled = MutableLiveData(false)
 
     init {

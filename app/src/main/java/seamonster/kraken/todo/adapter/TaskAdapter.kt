@@ -2,9 +2,9 @@ package seamonster.kraken.todo.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.TaskItemBinding
 import seamonster.kraken.todo.listener.TaskItemListener
@@ -32,19 +32,17 @@ class TasksListAdapter(private val listener: TaskItemListener) :
             t = task
             if (task.dateTime != null) {
                 chipDateTime.text =
-                    AppUtil().convertDateTime(
-                        (listener as Fragment).requireContext(),
-                        task.dateTime!!
-                    )
+                    AppUtil().convertDateTime(root.context, task.dateTime!!)
             }
             if (task.uncompleted) {
                 textTitle.setTextAppearance(R.style.TaskTitleUncompleted)
             } else {
                 textTitle.setTextAppearance(R.style.TaskTitle)
             }
-            root.setOnClickListener { listener.onItemClick(task) }
-            checkboxStar.setOnClickListener { listener.onItemImportantChanged(task) }
-            checkboxCompleted.setOnClickListener { listener.onItemCompletedChanged(task) }
+            val item = root as MaterialCardView
+            item.setOnClickListener { listener.onItemClick(task) }
+            checkboxStar.setOnClickListener { listener.onItemImportantChange(task) }
+            checkboxCompleted.setOnClickListener { listener.onItemCompletedChange(task) }
         }
     }
 

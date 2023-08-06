@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.persistence.AppDatabase
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -56,9 +57,29 @@ class ScheduleNextTaskWorker(context: Context, params: WorkerParameters) : Worke
     private fun updateTask(taskId: Int) {
         val db = AppDatabase.getInstance(this.applicationContext)
         CoroutineScope(Dispatchers.IO).launch {
-            var task = db.taskDao().getTaskById(taskId)
-            task = AppUtil.updateTaskDateTime(task)
+            val task = db.taskDao().getTaskById(taskId)
+            updateTaskDateTime(task)
             db.taskDao().upsert(task)
+        }
+    }
+
+    private fun updateTaskDateTime(task: Task) {
+        when (task.repeat) {
+            1 -> {
+                task.dateTime?.apply { set(Calendar.DATE, get(Calendar.DATE) + 1) }
+            }
+
+            2 -> {
+                task.dateTime?.apply { set(Calendar.DATE, get(Calendar.DATE) + 7) }
+            }
+
+            3 -> {
+                task.dateTime?.apply { set(Calendar.MONTH, get(Calendar.MONTH) + 1) }
+            }
+
+            4 -> {
+                task.dateTime?.apply { set(Calendar.YEAR, get(Calendar.YEAR) + 1) }
+            }
         }
     }
 

@@ -32,7 +32,7 @@ class AppUtil {
 
     fun scheduleNextTask(context: Context, task: Task) {
         val data = Data.Builder()
-            .putInt("task", task.id)
+            .putInt("taskId", task.id)
             .build()
         val scheduler = OneTimeWorkRequest.Builder(ScheduleNextTaskWorker::class.java)
             .setInputData(data)
@@ -41,27 +41,6 @@ class AppUtil {
     }
 
     companion object {
-
-        fun updateTaskDateTime(task: Task) : Task{
-            when (task.repeat) {
-                1 -> {
-                    task.dateTime?.apply { set(Calendar.DATE, get(Calendar.DATE) + 1) }
-                }
-
-                2 -> {
-                    task.dateTime?.apply { set(Calendar.DATE, get(Calendar.DATE) + 7) }
-                }
-
-                3 -> {
-                    task.dateTime?.apply { set(Calendar.MONTH, get(Calendar.MONTH) + 1) }
-                }
-
-                4 -> {
-                    task.dateTime?.apply { set(Calendar.YEAR, get(Calendar.YEAR) + 1) }
-                }
-            }
-            return task
-        }
 
         private fun convertDate(calendar: Calendar): String {
             val date = String.format("%02d", calendar.get(Calendar.DATE))

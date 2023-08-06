@@ -71,11 +71,11 @@ class PageFragment : Fragment(), TaskItemListener {
         dialog.show(parentFragmentManager, EditTaskFragment.TAG)
     }
 
-    override fun onItemCompletedChanged(task: Task) {
+    override fun onItemCompletedChange(task: Task) {
         viewModel.upsert(task)
     }
 
-    override fun onItemImportantChanged(task: Task) {
+    override fun onItemImportantChange(task: Task) {
         viewModel.upsert(task)
     }
 }

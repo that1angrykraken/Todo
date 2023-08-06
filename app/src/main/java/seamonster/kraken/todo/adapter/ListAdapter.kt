@@ -8,11 +8,11 @@ import seamonster.kraken.todo.databinding.ListItemBinding
 import seamonster.kraken.todo.listener.ListItemListener
 import seamonster.kraken.todo.model.ListInfo
 
-class ListSelectorAdapter(
+class ListAdapter(
     var data: List<ListInfo>,
     private val currentListId: Int,
     private val fragment: Fragment
-) : RecyclerView.Adapter<ListSelectorAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
