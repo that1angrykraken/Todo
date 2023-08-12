@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="user"
+            type="seamonster.kraken.todo.model.User" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_bg"
+        android:backgroundTint="?colorOnSurfaceInverse"
+        android:backgroundTintMode="multiply"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonClose"
+            style="?materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/close"
+            app:icon="@drawable/round_close_48"
+            app:iconTint="?colorOnSurface" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/round_bg"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgProfilePhoto"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="12dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/round_account_circle_48"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearance="@style/CircledProfilePhoto" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/textDisplayName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@{user.displayName}"
+                    android:textAppearance="?textAppearanceTitleSmall"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imgProfilePhoto"
+                    app:layout_constraintTop_toTopOf="@+id/imgProfilePhoto" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/textEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@{user.email}"
+                    android:textAppearance="?textAppearanceBodySmall"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imgProfilePhoto"
+                    app:layout_constraintTop_toBottomOf="@+id/textDisplayName" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipEditInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="12dp"
+                    android:backgroundTint="?colorSurface"
+                    android:checkable="false"
+                    android:text="@string/manage_google_account"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/textEmail"
+                    app:layout_constraintTop_toBottomOf="@id/imgProfilePhoto" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dividerColor="?colorOnSurfaceInverse"
+                app:dividerThickness="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSignOut"
+                style="@style/DialogButtonOption"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="@string/sign_out"
+                android:textColor="?colorOnSurface"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/round_logout_24"
+                app:iconGravity="textStart"
+                app:iconPadding="4dp"
+                app:iconTint="?colorOnSurface" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSettings"
+            style="@style/DialogButtonOption"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/settings"
+            android:textColor="?colorOnSurface"
+            app:icon="@drawable/round_settings_24" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonFeedback"
+            style="@style/DialogButtonOption"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/feedback"
+            android:textColor="?colorOnSurface"
+            app:icon="@drawable/round_feedback_24" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:text="Nhom 3 - Tasks version: 1.0"
+            android:textAlignment="center"
+            android:textAppearance="?textAppearanceBodySmall"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+</layout>

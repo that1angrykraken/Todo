@@ -11,7 +11,7 @@ import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.FragmentEditTaskBinding
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.util.AppUtil
-import seamonster.kraken.todo.viewmodel.AppViewModel
+import seamonster.kraken.todo.viewmodel.TaskViewModel
 import java.util.Calendar
 
 class EditTaskFragment : DialogFragment() {
@@ -20,14 +20,15 @@ class EditTaskFragment : DialogFragment() {
         const val TAG = "EditTaskFragment"
     }
 
-    private lateinit var viewModel: AppViewModel
+    private lateinit var viewModel: TaskViewModel
     private lateinit var binding: FragmentEditTaskBinding
     var task = Task()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProvider(requireActivity())[AppViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
         binding = FragmentEditTaskBinding.inflate(layoutInflater)
         binding.t = task
+
         return Dialog(requireContext(), R.style.DialogTheme).also {
             initNavigation(it)
             initButtonDelete(it)
@@ -46,16 +47,19 @@ class EditTaskFragment : DialogFragment() {
     }
 
     private fun initButtonSetDateTime() {
-        if(task.dateTime != null){
-            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), task.dateTime!!)
+        if(task.year > 0){
+            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), task)
         }
         binding.cardDateTime.setOnClickListener {
             showDatePicker()
         }
+        binding.chipDateTime.setOnCloseIconClickListener {
+            task.year = 0
+        }
     }
 
     private fun showDatePicker() {
-        val c = task.dateTime ?: Calendar.getInstance()
+        val c = if (task.year > 0) AppUtil.getDateTimeFrom(task) else Calendar.getInstance()
         val dateDialog = MaterialDatePicker.Builder.datePicker()
             .setTitleText(getText(R.string.select_date))
             .setSelection(c.timeInMillis)
@@ -80,11 +84,12 @@ class EditTaskFragment : DialogFragment() {
             .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
             .build()
         timePicker.addOnPositiveButtonClickListener {
-            task.dateTime = calendar.apply {
-                set(Calendar.HOUR_OF_DAY, timePicker.hour)
-                set(Calendar.MINUTE, timePicker.minute)
+            calendar.let {
+                it.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                it.set(Calendar.MINUTE, timePicker.minute)
             }
-            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), task.dateTime!!)
+            AppUtil.parseDateTimeToTask(calendar, task)
+            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), task)
         }
         timePicker.show(parentFragmentManager, null)
     }

@@ -48,8 +48,21 @@
     <string name="delete_list_dialog_title">Delete current list?</string>
     <string name="delete_list_dialog_message">This list and all related tasks will be delete permanently.</string>
     <string name="notification_channel_name">Main channel</string>
-    <string name="invalid_list_name">List name is empty or already exist.</string>
     <string name="create_new_list">Create new list</string>
-    <string name="notification_permission_require_message">This app needs notifications permission to notify you when your tasks are due. \nWhenever you change your mind, you can turn on notifications for this app by going to System settings > Notifications > App settings.</string>
+    <string name="notification_permission_require_message">Whenever you change your mind, you can turn on notifications for this app by going to <b>System settings > Notifications > App settings</b>.</string>
     <string name="notification_permission_require_title">Permission denied!</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="please_wait">Please wait..</string>
+    <string name="sign_in_required">Please sign in to continue</string>
+    <string name="signing_in">Signing in as %s</string>
+    <string name="task_due_datetime">Task datetime</string>
+    <string name="request_permission_dialog_title">Turn on notifications!</string>
+    <string name="request_permission_dialog_desc"><b>Tasks</b> needs notifications permission to be turned on to notify you when it\'s time to do your tasks.</string>
+    <string name="skip">Skip</string>
+    <string name="feedback">Feedback</string>
+    <string name="sign_out">Sign out</string>
+    <string name="settings">Settings</string>
+    <string name="manage_google_account">Manage your Google Account</string>
+    <string name="sign_in">Sign in with Google</string>
+    <string name="close">Close</string>
 </resources>

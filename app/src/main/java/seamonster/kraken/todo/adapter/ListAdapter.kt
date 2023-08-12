@@ -10,7 +10,7 @@ import seamonster.kraken.todo.model.ListInfo
 
 class ListAdapter(
     var data: List<ListInfo>,
-    private val currentListId: Int,
+    private val currentListId: String,
     private val fragment: Fragment
 ) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)

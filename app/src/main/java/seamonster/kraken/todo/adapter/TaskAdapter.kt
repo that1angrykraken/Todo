@@ -16,7 +16,7 @@ class TasksListAdapter(private val listener: TaskItemListener) :
 
     var data: List<Task> = ArrayList()
         set(value) {
-            val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(CallBack(field, value))
+            val result = DiffUtil.calculateDiff(CallBack(field, value))
             field = value
             result.dispatchUpdatesTo(this)
         }
@@ -30,11 +30,10 @@ class TasksListAdapter(private val listener: TaskItemListener) :
         val task = data[holder.adapterPosition]
         with(holder.binding) {
             t = task
-            if (task.dateTime != null) {
-                chipDateTime.text =
-                    AppUtil().convertDateTime(root.context, task.dateTime!!)
+            if (task.year > 0) {
+                chipDateTime.text = AppUtil().convertDateTime(root.context, task)
             }
-            if (task.uncompleted) {
+            if (!AppUtil.afterNow(task)) {
                 textTitle.setTextAppearance(R.style.TaskTitleUncompleted)
             } else {
                 textTitle.setTextAppearance(R.style.TaskTitle)
@@ -50,28 +49,24 @@ class TasksListAdapter(private val listener: TaskItemListener) :
         return data.size
     }
 
-    override fun getItemId(position: Int): Long {
-        return data[position].id.toLong()
-    }
-
     inner class ViewHolder(val binding: TaskItemBinding) : RecyclerView.ViewHolder(binding.root)
-}
 
-class CallBack(private val oldData: List<Task>, private val newData: List<Task>) :
-    DiffUtil.Callback() {
-    override fun getOldListSize(): Int {
-        return oldData.size
-    }
+    class CallBack(private val oldData: List<Task>, private val newData: List<Task>) :
+        DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldData.size
+        }
 
-    override fun getNewListSize(): Int {
-        return newData.size
-    }
+        override fun getNewListSize(): Int {
+            return newData.size
+        }
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldData[oldItemPosition].id == newData[newItemPosition].id
-    }
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldData[oldItemPosition].id == newData[newItemPosition].id
+        }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldData[oldItemPosition] == newData[newItemPosition]
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldData[oldItemPosition] == newData[newItemPosition]
+        }
     }
 }

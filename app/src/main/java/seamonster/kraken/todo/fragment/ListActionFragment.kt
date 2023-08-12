@@ -10,7 +10,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.FragmentListActionBinding
 import seamonster.kraken.todo.model.ListInfo
-import seamonster.kraken.todo.viewmodel.AppViewModel
+import seamonster.kraken.todo.viewmodel.ListViewModel
+import seamonster.kraken.todo.viewmodel.TaskViewModel
 
 class ListActionFragment : BottomSheetDialogFragment() {
 
@@ -18,7 +19,8 @@ class ListActionFragment : BottomSheetDialogFragment() {
         const val TAG: String = "ListActionFragment"
     }
 
-    private lateinit var viewModel: AppViewModel
+    private lateinit var taskViewModel: TaskViewModel
+    private lateinit var listViewModel: ListViewModel
     private lateinit var binding: FragmentListActionBinding
 
     override fun onCreateView(
@@ -30,34 +32,37 @@ class ListActionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initializeComponents() {
-        viewModel = ViewModelProvider(requireActivity())[AppViewModel::class.java]
+        taskViewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
+        listViewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
         initButtonRenameList()
         initButtonDeleteList()
         initButtonDeleteCompletedTasks()
     }
 
     private fun initButtonRenameList() {
-        val id = viewModel.currentList.value!!.id
-        binding.buttonRenameList.isEnabled = id > 1
+        val id = taskViewModel.currentList.value!!.id
+        binding.buttonRenameList.isEnabled = (id != "0")
         binding.buttonRenameList.setOnClickListener {
             val dialog = EditListFragment()
-            dialog.list = viewModel.currentList.value!!
+            dialog.list = taskViewModel.currentList.value!!
             dialog.show(parentFragmentManager, EditListFragment.TAG)
+            dismiss()
         }
     }
 
     private fun initButtonDeleteList() {
-        val id = viewModel.currentList.value!!.id
-        binding.buttonDeleteList.isEnabled = id > 1
+        val id = taskViewModel.currentList.value!!.id
+        binding.buttonDeleteList.isEnabled = (id != "0")
         // show confirmation dialog
         binding.buttonDeleteList.setOnClickListener {
+            dismiss()
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.delete_list_dialog_title))
                 .setMessage(getString(R.string.delete_list_dialog_message))
                 .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ ->
-                    viewModel.deleteList(ListInfo(id))
-                    viewModel.setCurrentList(ListInfo(1))
-                    dismiss()
+                    listViewModel.delete(ListInfo().also { it.id = id })
+                    val defaultList = listViewModel.getLists.value?.find { it.id == "0" }!!
+                    taskViewModel.setCurrentList(defaultList)
                 }
                 .setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ ->
                     /* do nothing */
@@ -67,17 +72,17 @@ class ListActionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initButtonDeleteCompletedTasks() {
-        val tasks = viewModel.completedTasks.value
+        val tasks = taskViewModel.completedTasks.value
         binding.buttonDeleteCompletedTasks.isEnabled = !tasks.isNullOrEmpty()
 
         binding.buttonDeleteCompletedTasks.setOnClickListener {
             // show confirmation dialog
+            dismiss()
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.delete_dialog_title))
                 .setMessage(getString(R.string.delete_dialog_message))
                 .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ ->
-                    viewModel.delete(*tasks!!.toTypedArray())
-                    dismiss()
+                    taskViewModel.delete(*tasks!!.toTypedArray())
                 }
                 .setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ ->
                     /* do nothing */

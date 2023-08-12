@@ -4,37 +4,31 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat.*
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.activity.MainActivity
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.persistence.AppDatabase
+import java.util.Calendar
 
-class NotificationWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
-
+class NotificationReceiver : BroadcastReceiver() {
     companion object {
-        const val TAG = "NotificationWorker"
+        const val TAG = "NotificationReceiver"
         const val CHANNEL_ID = "MAIN_CHANNEL"
     }
 
-    override fun doWork(): Result {
-        val taskId = inputData.getInt("taskId", 0)
-        if (taskId > 0){
-            createNotificationChannel(applicationContext)
-            notifyTask(applicationContext, taskId)
+    override fun onReceive(context: Context, intent: Intent) {
+        val task = AppUtil.getTaskFromBundle(intent.extras)
+        if (task != null) {
+            createNotificationChannel(context)
+            showNotification(context, task)
         }
-        return Result.success()
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -50,35 +44,29 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         }
     }
 
-    private fun notifyTask(context: Context, taskId: Int){
-        CoroutineScope(Dispatchers.IO).launch {
-            val db = AppDatabase.getInstance(context)
-            val task = db.taskDao().getTaskById(taskId)
-            showNotification(context, task)
-        }
-    }
-
-    private fun showNotification(context: Context, task: Task?) {
-        if (task == null) return
-
-        val notificationId = task.id
-        val actionTitle = context.getString(R.string.mark_completed)
+    private fun showNotification(context: Context, task: Task) {
+        val notificationId = System.currentTimeMillis().toInt()
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        val bundle = Bundle().apply { putSerializable("task", task) }
+        val bundle = Bundle().apply {
+            updateDateTime(task)
+            putSerializable("task", task)
+            putInt("notificationId", notificationId)
+        }
         val intent = Intent(context, MarkCompletedService::class.java).apply { putExtras(bundle) }
         val actionIntent =
-            PendingIntent.getService(context, task.id, intent, flags)
+            PendingIntent.getService(context, System.currentTimeMillis().toInt(), intent, flags)
         val intent1 = Intent(context, MainActivity::class.java).apply { putExtras(bundle) }
         val contentIntent =
-            PendingIntent.getActivity(context, task.id, intent1, flags)
+            PendingIntent.getActivity(context, System.currentTimeMillis().toInt(), intent1, flags)
 
-        val builder = Builder(context, CHANNEL_ID)
+        val actionTitle = context.getString(R.string.mark_completed)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(task.title)
             .setContentText(task.desc)
             .setContentIntent(contentIntent)
-            .setStyle(BigTextStyle().bigText(task.desc))
-            .setPriority(if (task.important) PRIORITY_MAX else PRIORITY_HIGH)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(task.desc))
+            .setPriority(if (task.important) NotificationCompat.PRIORITY_MAX else NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .addAction(R.drawable.round_done_48, actionTitle, actionIntent)
 
@@ -89,9 +77,20 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 notify(notificationId, builder.build())
-                AppUtil().scheduleNextTask(context, task)
+                val schedulerIntent = Intent(context, ScheduleTaskService::class.java).apply {
+                    putExtras(bundle)
+                }
+                context.startForegroundService(schedulerIntent)
             }
         }
     }
 
+    private fun updateDateTime(task: Task) {
+        when (task.repeat) {
+            1 -> AppUtil.updateDateTime(task, Calendar.DATE, 1)
+            2 -> AppUtil.updateDateTime(task, Calendar.DATE, 7)
+            3 -> AppUtil.updateDateTime(task, Calendar.MONTH, 1)
+            4 -> AppUtil.updateDateTime(task, Calendar.YEAR, 1)
+        }
+    }
 }

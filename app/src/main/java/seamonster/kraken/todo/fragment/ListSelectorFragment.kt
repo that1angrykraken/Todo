@@ -11,20 +11,23 @@ import seamonster.kraken.todo.adapter.ListAdapter
 import seamonster.kraken.todo.databinding.FragmentListSelectorBinding
 import seamonster.kraken.todo.listener.ListItemListener
 import seamonster.kraken.todo.model.ListInfo
-import seamonster.kraken.todo.viewmodel.AppViewModel
+import seamonster.kraken.todo.viewmodel.ListViewModel
+import seamonster.kraken.todo.viewmodel.TaskViewModel
 import java.util.ArrayList
 
 class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
 
     private lateinit var binding: FragmentListSelectorBinding
-    private lateinit var viewModel: AppViewModel
+    private lateinit var listViewModel: ListViewModel
+    private lateinit var taskViewModel: TaskViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(requireActivity())[AppViewModel::class.java]
+        listViewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
+        taskViewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
         binding = FragmentListSelectorBinding.inflate(inflater, container, false)
         initLists()
         initButtonCreateList()
@@ -32,12 +35,12 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
     }
 
     private fun initLists() {
-        val adapter = ListAdapter(ArrayList(), viewModel.currentList.value!!.id, this)
+        val adapter = ListAdapter(ArrayList(), taskViewModel.currentList.value?.id!!, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-        viewModel.lists.observeForever {
+        listViewModel.getLists.observeForever {
             adapter.data = it
-            adapter.notifyItemInserted(adapter.itemCount-1)
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -53,7 +56,7 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
     }
 
     override fun onItemClicked(list: ListInfo) {
-        viewModel.setCurrentList(list)
+        taskViewModel.setCurrentList(list)
         dismiss()
     }
 }

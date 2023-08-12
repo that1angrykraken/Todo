@@ -48,8 +48,21 @@
     <string name="delete_list_dialog_title">Xóa danh sách hiện tại?</string>
     <string name="delete_list_dialog_message">Danh sách này cùng các việc cần làm liên quan sẽ bị xóa vĩnh viễn.</string>
     <string name="notification_channel_name">Kênh chính</string>
-    <string name="invalid_list_name">Tên không được để trống hoặc trùng với tên đã có</string>
     <string name="create_new_list">Tạo danh sách mới</string>
-    <string name="notification_permission_require_message">Ứng dụng này cần có quyền thông báo để thông báo cho bạn khi các việc cần làm đến hạn. \nBất cứ khi nào bạn thay đổi ý định, bạn có thể bật thông báo cho ứng dụng này bằng cách đi tới Cài đặt hệ thống > Thông báo > Cài đặt ứng dụng.\n</string>
+    <string name="notification_permission_require_message">Bất cứ khi nào bạn thay đổi ý định, bạn có thể bật thông báo cho ứng dụng này bằng cách đi tới <b>Cài đặt hệ thống > Thông báo > Cài đặt ứng dụng</b>.</string>
     <string name="notification_permission_require_title">Thông báo bị từ chối!</string>
+    <string name="sign_in_with_google">Đăng nhập bằng Google</string>
+    <string name="please_wait">Vui lòng đợi..</string>
+    <string name="sign_in_required">Vui lòng đăng nhập để tiếp tục</string>
+    <string name="signing_in">Đăng nhập với tư cách %s</string>
+    <string name="task_due_datetime">Ngày giờ đến hạn</string>
+    <string name="request_permission_dialog_title">Bật thông báo!</string>
+    <string name="request_permission_dialog_desc"><b>Tasks</b> cần quyền thông báo để cho bạn biết khi đến giờ làm các công việc của bạn.</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="feedback">Phản hồi</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="settings">Cài đặt</string>
+    <string name="manage_google_account">Quản lý Tài khoản Google của bạn</string>
+    <string name="sign_in">Đăng nhập bằng Google</string>
+    <string name="close">Đóng</string>
 </resources>

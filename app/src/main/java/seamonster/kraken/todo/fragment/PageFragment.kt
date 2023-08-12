@@ -12,12 +12,12 @@ import seamonster.kraken.todo.adapter.TasksListAdapter
 import seamonster.kraken.todo.databinding.FragmentPageBinding
 import seamonster.kraken.todo.listener.TaskItemListener
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.viewmodel.AppViewModel
+import seamonster.kraken.todo.viewmodel.TaskViewModel
 
 class PageFragment : Fragment(), TaskItemListener {
     private lateinit var binding: FragmentPageBinding
     private lateinit var adapter: TasksListAdapter
-    private lateinit var viewModel: AppViewModel
+    private lateinit var viewModel: TaskViewModel
     private var pageIndex: Int? = 0
 
     companion object {
@@ -38,7 +38,7 @@ class PageFragment : Fragment(), TaskItemListener {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         pageIndex = arguments?.getInt(ARG_PAGE_INDEX, 0)
-        viewModel = ViewModelProvider(requireActivity())[AppViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
         binding = FragmentPageBinding.inflate(layoutInflater, container, false)
         initRecyclerView()
         initEmptyText()

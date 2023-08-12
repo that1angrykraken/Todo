@@ -1,30 +1,46 @@
 package seamonster.kraken.todo.activity
 
 import android.Manifest
+import android.app.Dialog
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.launch
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.adapter.PagerAdapter
 import seamonster.kraken.todo.databinding.ActivityMainBinding
+import seamonster.kraken.todo.databinding.DialogRequestPermissionBinding
 import seamonster.kraken.todo.fragment.EditTaskFragment
 import seamonster.kraken.todo.fragment.ListActionFragment
 import seamonster.kraken.todo.fragment.ListSelectorFragment
+import seamonster.kraken.todo.fragment.OptionDialogFragment
 import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.model.Task
+import seamonster.kraken.todo.repository.LocalDataRepo
 import seamonster.kraken.todo.util.AppUtil
-import seamonster.kraken.todo.viewmodel.AppViewModel
+import seamonster.kraken.todo.util.ScheduleTaskService
+import seamonster.kraken.todo.viewmodel.ListViewModel
+import seamonster.kraken.todo.viewmodel.TaskViewModel
+import seamonster.kraken.todo.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: AppViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
+    private val taskViewModel: TaskViewModel by viewModels()
+    private val listViewModel: ListViewModel by viewModels()
+    private lateinit var localData: LocalDataRepo
 
     companion object {
         const val TAG: String = "MainActivity"
@@ -35,63 +51,116 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeComponents()
-    }
-
-    private fun initializeComponents() {
-        initDefaultList()
-        initTabs()
-        initPager()
-        initFabAddTask()
-        initChipUpcomingFilter()
-        initButtonSelectList()
-        initButtonListAction()
-        initScheduler()
-        showTaskFromNotification()
-    }
-
-    private fun initDefaultList() {
-        val list = ListInfo(1).apply { name = getString(R.string.my_tasks) }
-        viewModel.upsertList(list)
-        viewModel.setCurrentList(list)
-    }
-
-    private fun showTaskFromNotification() {
-        val task = AppUtil.getTaskFromBundle(intent.extras)
-        if (task != null) {
-            showEditTaskDialog(task)
-        }
-    }
-
-    private fun initScheduler() {
-        viewModel.allTasks.observeForever { tasks ->
-            if (tasks.isNotEmpty()){
-                AppUtil().scheduleNextTask(this, Task(0))
-            }
-        }
+        localData = LocalDataRepo(this)
     }
 
     override fun onStart() {
         super.onStart()
-        requestPermission()
+        initCurrentUser()
+    }
+
+    private fun initCurrentUser() {
+        userViewModel.currentUser.observeForever {
+            if (it != null){
+                Picasso.get().load(it.photoUrl).into(binding.buttonCurrentUser)
+                initButtonCurrentUser()
+                requestPermission()
+            } else {
+                startActivity(Intent(this, SignInActivity::class.java))
+            }
+        }
+    }
+
+    private fun initButtonCurrentUser() {
+        binding.buttonCurrentUser.setOnClickListener {
+            OptionDialogFragment().show(supportFragmentManager, OptionDialogFragment.TAG)
+        }
     }
 
     private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-            if (!shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)){
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                    initScheduler()
+                }
+
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    lifecycleScope.launch {
+                        localData.skipDialog.collect { if (it) showRequestPermissionDialog() }
+                    }
+                }
+
+                else -> {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
         }
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) {
-        if (!it) {
-            val dialog = MaterialAlertDialogBuilder(this)
-                .setTitle(getString(R.string.notification_permission_require_title))
-                .setMessage(getString(R.string.notification_permission_require_message))
-                .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ -> }
-            dialog.show()
+    ) { _ ->
+        requestPermission()
+    }
+
+    private fun initScheduler() {
+        taskViewModel.allTasks.observeForever { tasks ->
+            if (tasks.isNotEmpty()) {
+                startForegroundService(Intent(this, ScheduleTaskService::class.java))
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun showRequestPermissionDialog() {
+        val dialog = Dialog(this, R.style.DialogTheme)
+        val dialogBinding = DialogRequestPermissionBinding.inflate(layoutInflater)
+        dialogBinding.buttonOK.setOnClickListener {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            dialog.dismiss()
+        }
+        dialogBinding.buttonCancel.setOnClickListener {
+            lifecycleScope.launch {
+                localData.update(false)
+            }
+            showPermissionDeniedDialog()
+            dialog.cancel()
+        }
+        dialog.setContentView(dialogBinding.root)
+        dialog.show()
+    }
+
+    private fun showPermissionDeniedDialog() {
+        MaterialAlertDialogBuilder(this).setTitle(getText(R.string.notification_permission_require_title))
+            .setMessage(getText(R.string.notification_permission_require_message))
+            .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ -> }
+            .show()
+    }
+
+    private fun initializeComponents() {
+        initButtonSelectList()
+        initDefaultList()
+        initTabs()
+        initPager()
+        initFabAddTask()
+        initChipUpcomingFilter()
+        initButtonListAction()
+        showTaskFromNotification()
+    }
+
+    private fun initDefaultList() {
+        val list = ListInfo().apply {
+            id = "0"
+            name = getString(R.string.my_tasks)
+        }
+        listViewModel.upsert(list)
+        taskViewModel.setCurrentList(list)
+    }
+
+    private fun showTaskFromNotification() {
+        val task = AppUtil.getTaskFromBundle(intent.extras)
+        if (task != null) {
+            showEditTaskDialog(task)
         }
     }
 
@@ -104,12 +173,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChipUpcomingFilter() {
         binding.checkboxUpcomingFilter.setOnClickListener {
-            viewModel.upcomingFilterEnabled.value = binding.checkboxUpcomingFilter.isChecked
+            taskViewModel.setUpcomingFilter(binding.checkboxUpcomingFilter.isChecked)
         }
     }
 
     private fun initButtonSelectList() {
-        viewModel.currentList.observeForever { list ->
+        taskViewModel.currentList.observeForever { list ->
             binding.list = list
         }
         binding.buttonSelectList.setOnClickListener {
@@ -183,7 +252,6 @@ class MainActivity : AppCompatActivity() {
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
             addOnTabSelectedListener(listener)
-
         }
     }
 

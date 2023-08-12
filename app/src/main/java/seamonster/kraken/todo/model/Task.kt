@@ -3,14 +3,11 @@ package seamonster.kraken.todo.model
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import com.google.firebase.Timestamp
 import java.io.Serializable
-import java.util.Calendar
 
-@Entity("tasks")
-class Task(@PrimaryKey(autoGenerate = true) val id: Int = 0) : BaseObservable(), Serializable {
+class Task : BaseObservable(), Serializable {
+    var id: String? = null
 
     @get:Bindable
     var title: String = ""
@@ -34,7 +31,7 @@ class Task(@PrimaryKey(autoGenerate = true) val id: Int = 0) : BaseObservable(),
         }
 
     @get:Bindable
-    var listId: Int = 0
+    var listId: String? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.listId)
@@ -55,13 +52,39 @@ class Task(@PrimaryKey(autoGenerate = true) val id: Int = 0) : BaseObservable(),
         }
 
     @get:Bindable
-    var dateTime: Calendar? = null
+    var year: Int = 0
         set(value) {
             field = value
-            notifyPropertyChanged(BR.dateTime)
+            notifyPropertyChanged(BR.year)
         }
 
-    @get:Ignore
-    val uncompleted: Boolean
-        get() = Calendar.getInstance().after(dateTime) && !completed
+    @get:Bindable
+    var month: Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.month)
+        }
+
+    @get:Bindable
+    var date: Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.date)
+        }
+
+    @get:Bindable
+    var hour: Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.hour)
+        }
+
+    @get:Bindable
+    var minute: Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.minute)
+        }
+
+    var createdAt: Long? = null
 }

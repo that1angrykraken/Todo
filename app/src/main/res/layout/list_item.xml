@@ -10,7 +10,7 @@
 
         <variable
             name="currentId"
-            type="Integer" />
+            type="String" />
 
         <import type="android.view.View" />
     </data>

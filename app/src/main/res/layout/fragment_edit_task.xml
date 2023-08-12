@@ -25,8 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:navigationIcon="@drawable/round_arrow_back_28"
-                app:navigationIconTint="?colorOnSurface"
-                app:title="Edit task">
+                app:navigationIconTint="?colorOnSurface">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSave"
@@ -43,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="@string/button_delete"
-                    android:visibility="@{t.id &gt; 0 ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{t.id != null ? View.VISIBLE : View.GONE}" />
 
             </com.google.android.material.appbar.MaterialToolbar>
 
@@ -153,7 +152,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/set_date_time"
                             android:textAppearance="?textAppearanceBodyMedium"
-                            android:visibility="@{t.dateTime != null ? View.GONE : View.VISIBLE}" />
+                            android:visibility="@{t.year != 0 ? View.GONE : View.VISIBLE}" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipDateTime"
@@ -162,7 +161,7 @@
                             android:clickable="false"
                             android:focusable="false"
                             android:contentDescription="@string/set_date_time"
-                            android:visibility="@{t.dateTime != null ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{t.year != 0 ? View.VISIBLE : View.GONE}"
                             app:closeIconEnabled="true" />
 
                     </LinearLayout>
@@ -175,7 +174,7 @@
                     android:layout_height="56dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:visibility="@{t.dateTime != null ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{t.year != 0 ? View.VISIBLE : View.GONE}"
                     app:cardCornerRadius="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardDateTime"
@@ -225,7 +224,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:visibility="@{t.id > 0 ? View.VISIBLE : View.GONE}">
+            android:visibility="@{t.id != null ? View.VISIBLE : View.GONE}">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonMarkCompleted"
