@@ -65,4 +65,17 @@
     <string name="manage_google_account">Manage your Google Account</string>
     <string name="sign_in">Sign in with Google</string>
     <string name="close">Close</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string name="lang_vi" translatable="false">Tiếng Việt</string>
+    <string name="dark_mode_system">System</string>
+    <string name="dark_mode_on">On</string>
+    <string name="dark_mode_off">Off</string>
+    <string name="language">Language</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="button_send">Send</string>
+    <string name="feedback_sent">Feedback sent!</string>
+    <string name="fields_empty">Please fill in all fields!</string>
+    <string name="add_a_title">Add a title</string>
+    <string name="add_details">Add details</string>
 </resources>

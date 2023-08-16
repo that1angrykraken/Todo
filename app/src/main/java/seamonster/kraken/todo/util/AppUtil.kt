@@ -5,7 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.model.Task
+import seamonster.kraken.todo.repository.LocalData
 import java.util.Calendar
+import java.util.Locale
 
 class AppUtil {
 
@@ -30,7 +32,18 @@ class AppUtil {
 
     companion object {
 
-        fun updateDateTime(t: Task, field: Int, i: Int){
+        fun updateResources(context: Context, lang: String) : Context{
+            val locale = Locale(lang)
+            Locale.setDefault(locale)
+
+            val configuration = context.resources.configuration
+            configuration.setLocale(locale)
+            configuration.setLayoutDirection(locale)
+
+            return context.createConfigurationContext(configuration)
+        }
+
+        fun updateDateTime(t: Task, field: Int, i: Int) {
             val c = Calendar.getInstance().apply {
                 set(t.year, t.month, t.date, t.hour, t.minute)
                 set(field, get(field) + i)
@@ -42,7 +55,7 @@ class AppUtil {
             t.minute = c.get(Calendar.MINUTE)
         }
 
-        fun parseDateTimeToTask(c: Calendar, t: Task){
+        fun parseDateTimeToTask(c: Calendar, t: Task) {
             t.year = c.get(Calendar.YEAR)
             t.month = c.get(Calendar.MONTH)
             t.date = c.get(Calendar.DATE)
@@ -55,7 +68,7 @@ class AppUtil {
                 .apply { set(t.year, t.month, t.date, t.hour, t.minute, 0) }
         }
 
-        fun afterNow(t: Task?): Boolean{
+        fun afterNow(t: Task?): Boolean {
             if (t == null) return false
             return getDateTimeFrom(t).after(Calendar.getInstance())
         }

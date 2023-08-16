@@ -13,8 +13,7 @@ class ListRepo {
     }
 
     private val currentUserEmail = Firebase.auth.currentUser?.email
-    private val path = "users/$currentUserEmail/lists"
-    private val collectionReference = FirebaseFirestore.getInstance().collection(path)
+    private val collectionReference = DataSource.listReference(currentUserEmail)
 
     fun getAll(): MutableLiveData<List<ListInfo>> {
         val mutableLiveData = MutableLiveData<List<ListInfo>>()

@@ -53,6 +53,7 @@ class OptionDialogFragment : DialogFragment() {
             dismiss()
         }
         binding.buttonFeedback.setOnClickListener {
+            FeedbackFragment().show(parentFragmentManager, FeedbackFragment.TAG)
             dismiss()
         }
         binding.chipEditInfo.setOnClickListener {

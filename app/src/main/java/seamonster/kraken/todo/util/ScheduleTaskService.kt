@@ -32,7 +32,7 @@ class ScheduleTaskService : Service() {
         startForeground(NOTIFICATION_ID, notification())
         val task = AppUtil.getTaskFromBundle(intent.extras)
         if (task != null) updateTask(task)
-        scheduleNextTask()
+        else scheduleNextTask()
         stopSelf()
         return START_NOT_STICKY
     }
@@ -78,7 +78,10 @@ class ScheduleTaskService : Service() {
     private fun updateTask(task: Task) {
         colRef.document(task.id!!).set(task)
             .addOnCompleteListener {
-                if (it.isSuccessful) Log.d(TAG, "updateTask: OK")
+                if (it.isSuccessful) {
+                    scheduleNextTask()
+                    Log.d(TAG, "updateTask: OK")
+                }
                 else Log.e(TAG, "updateTask: Failed", it.exception)
             }
     }

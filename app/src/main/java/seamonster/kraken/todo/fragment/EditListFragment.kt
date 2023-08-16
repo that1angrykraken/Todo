@@ -30,7 +30,6 @@ class EditListFragment : DialogFragment() {
 
         val dialog = Dialog(requireContext(), R.style.DialogTheme)
         binding.buttonDone.setOnClickListener {
-//            checkName()
             viewModel.upsert(list)
             dialog.dismiss()
         }
@@ -40,27 +39,12 @@ class EditListFragment : DialogFragment() {
         return dialog
     }
 
-//    private fun checkName(count: Int = 1) {
-//        if (list.name.isEmpty()) list.name = getString(R.string.default_list_name)
-//        val b = viewModel.getLists.value!!.any { it.name.contentEquals(list.name) }
-//        if (b) {
-//            if (count == 1) list.name = list.name + " "
-//            val l = list.name.length
-//            list.name = list.name.replaceRange(l - 1, l, " $count")
-//            checkName(count + 1)
-//        } else {
-//        }
-//    }
-
     override fun onStart() {
         super.onStart()
         binding.textListName.requestFocus()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             binding.textListName.windowInsetsController?.show(WindowInsetsCompat.Type.ime())
         else {
-//            val inputMethodManager =
-//                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            inputMethodManager.showSoftInput(binding.textListName, InputMethodManager.SHOW_IMPLICIT)
             requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
     }

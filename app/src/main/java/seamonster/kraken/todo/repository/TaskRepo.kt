@@ -7,6 +7,7 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import seamonster.kraken.todo.model.Task
 import java.util.Calendar
@@ -17,8 +18,7 @@ class TaskRepo {
     }
 
     private val currentUserEmail = Firebase.auth.currentUser?.email
-    private val path = "users/$currentUserEmail/tasks"
-    private val collectionReference = FirebaseFirestore.getInstance().collection(path)
+    private val collectionReference = DataSource.taskReference(currentUserEmail)
 
     fun getTasks(): MutableLiveData<List<Task>> {
         val mutableLiveData = MutableLiveData<List<Task>>()
@@ -121,6 +121,15 @@ class TaskRepo {
                 .addOnFailureListener { e ->
                     Log.e(TAG, "upsertTask: Failed to delete task: ${it.id}", e)
                 }
+        }
+    }
+
+    fun deleteTask(listId: String){
+        collectionReference.whereEqualTo("listId", listId).get().addOnSuccessListener {
+            for (doc in it){
+                val task = doc.toObject(Task::class.java)
+                deleteTask(task)
+            }
         }
     }
 

@@ -65,4 +65,15 @@
     <string name="manage_google_account">Quản lý Tài khoản Google của bạn</string>
     <string name="sign_in">Đăng nhập bằng Google</string>
     <string name="close">Đóng</string>
+    <string name="dark_mode_system">Hệ thống</string>
+    <string name="dark_mode_on">Bật</string>
+    <string name="dark_mode_off">Tắt</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="dark_mode">Chế đối tối</string>
+    <string name="send_feedback">Gửi phản hồi</string>
+    <string name="button_send">Gửi</string>
+    <string name="feedback_sent">Phản hồi đã được gửi!</string>
+    <string name="fields_empty">Vui lòng điền vào tất cả các trường!</string>
+    <string name="add_a_title">Thêm tiêu đề</string>
+    <string name="add_details">Thêm chi tiết</string>
 </resources>

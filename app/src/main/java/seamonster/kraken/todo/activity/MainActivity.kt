@@ -27,7 +27,7 @@ import seamonster.kraken.todo.fragment.ListSelectorFragment
 import seamonster.kraken.todo.fragment.OptionDialogFragment
 import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.repository.LocalDataRepo
+import seamonster.kraken.todo.repository.LocalData
 import seamonster.kraken.todo.util.AppUtil
 import seamonster.kraken.todo.util.ScheduleTaskService
 import seamonster.kraken.todo.viewmodel.ListViewModel
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val userViewModel: UserViewModel by viewModels()
     private val taskViewModel: TaskViewModel by viewModels()
     private val listViewModel: ListViewModel by viewModels()
-    private lateinit var localData: LocalDataRepo
+    private lateinit var localData: LocalData
 
     companion object {
         const val TAG: String = "MainActivity"
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeComponents()
-        localData = LocalDataRepo(this)
+        localData = LocalData(this)
     }
 
     override fun onStart() {

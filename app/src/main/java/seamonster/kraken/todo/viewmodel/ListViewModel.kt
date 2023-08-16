@@ -3,6 +3,7 @@ package seamonster.kraken.todo.viewmodel
 import androidx.lifecycle.ViewModel
 import seamonster.kraken.todo.model.ListInfo
 import seamonster.kraken.todo.repository.ListRepo
+import seamonster.kraken.todo.repository.TaskRepo
 
 class ListViewModel: ViewModel() {
     companion object{
@@ -18,6 +19,7 @@ class ListViewModel: ViewModel() {
     }
 
     fun delete(list: ListInfo){
+        TaskRepo().deleteTask(list.id!!)
         dataSource.deleteList(list)
     }
 }
