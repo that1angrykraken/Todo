@@ -25,20 +25,20 @@ import seamonster.kraken.todo.fragment.EditTaskFragment
 import seamonster.kraken.todo.fragment.ListActionFragment
 import seamonster.kraken.todo.fragment.ListSelectorFragment
 import seamonster.kraken.todo.fragment.OptionDialogFragment
-import seamonster.kraken.todo.model.ListInfo
+import seamonster.kraken.todo.model.TasksList
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.repository.LocalData
 import seamonster.kraken.todo.util.AppUtil
 import seamonster.kraken.todo.util.ScheduleTaskService
 import seamonster.kraken.todo.viewmodel.ListViewModel
-import seamonster.kraken.todo.viewmodel.TaskViewModel
+import seamonster.kraken.todo.viewmodel.PageViewModel
 import seamonster.kraken.todo.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val userViewModel: UserViewModel by viewModels()
-    private val taskViewModel: TaskViewModel by viewModels()
+    private val pageViewModel: PageViewModel by viewModels()
     private val listViewModel: ListViewModel by viewModels()
     private lateinit var localData: LocalData
 
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initScheduler() {
-        taskViewModel.allTasks.observeForever { tasks ->
+        pageViewModel.allTasks.observeForever { tasks ->
             if (tasks.isNotEmpty()) {
                 startForegroundService(Intent(this, ScheduleTaskService::class.java))
             }
@@ -149,12 +149,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initDefaultList() {
-        val list = ListInfo().apply {
+        val list = TasksList().apply {
             id = "0"
             name = getString(R.string.my_tasks)
         }
         listViewModel.upsert(list)
-        taskViewModel.setCurrentList(list)
+        pageViewModel.setCurrentList(list)
     }
 
     private fun showTaskFromNotification() {
@@ -173,12 +173,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChipUpcomingFilter() {
         binding.checkboxUpcomingFilter.setOnClickListener {
-            taskViewModel.setUpcomingFilter(binding.checkboxUpcomingFilter.isChecked)
+            pageViewModel.setUpcomingFilter(binding.checkboxUpcomingFilter.isChecked)
         }
     }
 
     private fun initButtonSelectList() {
-        taskViewModel.currentList.observeForever { list ->
+        pageViewModel.currentList.observeForever { list ->
             binding.list = list
         }
         binding.buttonSelectList.setOnClickListener {
@@ -193,7 +193,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun showEditTaskDialog(task: Task = Task()) {
         val dialog = EditTaskFragment()
-        dialog.task = task
         dialog.show(supportFragmentManager, EditTaskFragment.TAG)
     }
 

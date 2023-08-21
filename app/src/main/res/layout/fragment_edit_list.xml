@@ -3,22 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="list"
-            type="seamonster.kraken.todo.model.ListInfo" />
+            type="seamonster.kraken.todo.model.TasksList" />
     </data>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/topAppBar"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:navigationIcon="@drawable/round_close_48"
-            app:title="@string/edit_list">
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:paddingVertical="12dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textListName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:hintEnabled="false"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/enter_list_title"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:text="@={list.name}"
+                    android:textAppearance="?textAppearanceBodyLarge" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonDone"
@@ -27,39 +47,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="@string/button_done"
+                app:layout_constraintEnd_toEndOf="@+id/textListName"
+                app:layout_constraintTop_toBottomOf="parent"
                 app:strokeWidth="0dp" />
 
-        </com.google.android.material.appbar.MaterialToolbar>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerThickness="1dp"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textListName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:hintEnabled="false">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/enter_list_title"
-                android:inputType="text"
-                android:maxLines="1"
-                android:text="@={list.name}"
-                android:textAppearance="?textAppearanceBodyLarge"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerThickness="1dp"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </layout>

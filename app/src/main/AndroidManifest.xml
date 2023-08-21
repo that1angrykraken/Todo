@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Todo"
         tools:targetApi="33">
+
         <receiver android:name=".util.NotificationReceiver" />
 
         <service android:name=".util.ScheduleTaskService" />

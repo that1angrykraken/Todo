@@ -4,7 +4,7 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 
-class ListInfo : BaseObservable(){
+class TasksList : BaseObservable(){
     var id: String? = null
 
     @get:Bindable

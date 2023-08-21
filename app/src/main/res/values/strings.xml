@@ -76,6 +76,7 @@
     <string name="button_send">Send</string>
     <string name="feedback_sent">Feedback sent!</string>
     <string name="fields_empty">Please fill in all fields!</string>
-    <string name="add_a_title">Add a title</string>
+    <string name="add_a_title">Enter title</string>
     <string name="add_details">Add details</string>
+    <string name="default_list_name">New list</string>
 </resources>

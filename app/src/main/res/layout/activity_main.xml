@@ -6,7 +6,7 @@
 
         <variable
             name="list"
-            type="seamonster.kraken.todo.model.ListInfo" />
+            type="seamonster.kraken.todo.model.TasksList" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -68,14 +68,6 @@
             android:layout_gravity="bottom"
             android:animateLayoutChanges="true">
 
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/checkboxUpcomingFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/upcoming"
-                android:tooltipText="@string/upcoming"
-                app:buttonCompat="@drawable/selector_upcoming_filter" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSelectList"
                 style="?materialIconButtonStyle"
@@ -89,6 +81,14 @@
                 android:textColor="?colorOnSurfaceVariant"
                 android:tooltipText="@string/current_tasks_list"
                 app:icon="@drawable/round_list_alt_48" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkboxUpcomingFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/upcoming"
+                android:tooltipText="@string/upcoming"
+                app:buttonCompat="@drawable/selector_upcoming_filter" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonListAction"

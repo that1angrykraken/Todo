@@ -1,8 +1,10 @@
 package seamonster.kraken.todo.fragment
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -11,6 +13,7 @@ import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.FragmentEditTaskBinding
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.util.AppUtil
+import seamonster.kraken.todo.viewmodel.PageViewModel
 import seamonster.kraken.todo.viewmodel.TaskViewModel
 import java.util.Calendar
 
@@ -20,23 +23,23 @@ class EditTaskFragment : DialogFragment() {
         const val TAG = "EditTaskFragment"
     }
 
-    private lateinit var viewModel: TaskViewModel
+    private val viewModel: TaskViewModel by viewModels()
+    private lateinit var pageViewModel: PageViewModel
     private lateinit var binding: FragmentEditTaskBinding
-    var task = Task()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
+        pageViewModel = ViewModelProvider(requireActivity())[PageViewModel::class.java]
         binding = FragmentEditTaskBinding.inflate(layoutInflater)
-        binding.t = task
+        viewModel.currentTask = pageViewModel.currentTask
+        binding.t = viewModel.currentTask
 
         return Dialog(requireContext(), R.style.DialogTheme).also {
             initNavigation(it)
             initButtonDelete(it)
             initButtonSave(it)
-            initButtonMarkCompleted(it)
+            initBottomBarButtons(it)
             initChipRepeatFrq()
             initButtonSetDateTime()
-            binding.toolbar.setNavigationOnClickListener { _ -> it.dismiss() }
             it.window?.setWindowAnimations(R.style.DialogBottomUpAnimation)
             it.setContentView(binding.root)
         }
@@ -47,19 +50,21 @@ class EditTaskFragment : DialogFragment() {
     }
 
     private fun initButtonSetDateTime() {
-        if(task.year > 0){
-            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), task)
+        if (viewModel.currentTask.year > 0) {
+            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), viewModel.currentTask)
         }
         binding.cardDateTime.setOnClickListener {
             showDatePicker()
         }
         binding.chipDateTime.setOnCloseIconClickListener {
-            task.year = 0
+            viewModel.currentTask.year = 0
         }
     }
 
     private fun showDatePicker() {
-        val c = if (task.year > 0) AppUtil.getDateTimeFrom(task) else Calendar.getInstance()
+        val c =
+            if (viewModel.currentTask.year > 0) AppUtil.getDateTimeFrom(viewModel.currentTask)
+            else Calendar.getInstance()
         val dateDialog = MaterialDatePicker.Builder.datePicker()
             .setTitleText(getText(R.string.select_date))
             .setSelection(c.timeInMillis)
@@ -88,50 +93,51 @@ class EditTaskFragment : DialogFragment() {
                 it.set(Calendar.HOUR_OF_DAY, timePicker.hour)
                 it.set(Calendar.MINUTE, timePicker.minute)
             }
-            AppUtil.parseDateTimeToTask(calendar, task)
-            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), task)
+            AppUtil.parseDateTimeToTask(calendar, viewModel.currentTask)
+            binding.chipDateTime.text =
+                AppUtil().convertDateTime(requireContext(), viewModel.currentTask)
         }
         timePicker.show(parentFragmentManager, null)
     }
 
     private fun initChipRepeatFrq() {
         val repeat = resources.getTextArray(R.array.repeat_frequencies)
-        binding.chipRepeatFrq.text = repeat[task.repeat]
+        binding.chipRepeatFrq.text = repeat[viewModel.currentTask.repeat]
         with(binding.cardRepeat) {
             setOnClickListener {
-                task.repeat = (task.repeat + 1) % 5
-                binding.chipRepeatFrq.text = repeat[task.repeat]
+                val newValue = (viewModel.currentTask.repeat + 1) % 5
+                viewModel.currentTask.repeat = newValue
+                binding.chipRepeatFrq.text = repeat[newValue]
             }
         }
     }
 
     private fun initButtonDelete(dialog: Dialog) {
         binding.buttonDelete.setOnClickListener {
-            viewModel.delete(task)
+            viewModel.deleteTask()
             dialog.dismiss()
         }
     }
 
     private fun initButtonSave(dialog: Dialog) {
         binding.buttonSave.setOnClickListener {
-            if (task.title.isEmpty()) task.title = getString(R.string.default_task_title)
-            viewModel.upsert(task)
+            viewModel.upsertTask()
             dialog.dismiss()
         }
     }
 
-    private fun initButtonMarkCompleted(dialog: Dialog) {
-        with(binding.buttonMarkCompleted) {
-            text = if (task.completed) getText(R.string.mark_uncompleted)
-            else getText(R.string.mark_completed)
-            setOnClickListener {
-                task.completed = !task.completed
-                viewModel.upsert(task)
-                if (task.completed) {
-                    text = getText(R.string.mark_uncompleted)
-                    dialog.dismiss()
-                } else text = getText(R.string.mark_completed)
-            }
+    private fun initBottomBarButtons(dialog: Dialog) {
+        binding.buttonMarkCompleted.setOnClickListener {
+            viewModel.markCompleted(true)
+            dialog.dismiss()
         }
+        binding.buttonMarkUncompleted.setOnClickListener {
+            viewModel.markCompleted(false)
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        pageViewModel.currentTask = Task()
     }
 }

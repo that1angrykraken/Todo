@@ -1,65 +1,39 @@
 package seamonster.kraken.todo.viewmodel
 
+import android.app.Application
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
-import com.google.firebase.Timestamp
-import seamonster.kraken.todo.model.ListInfo
+import seamonster.kraken.todo.R
 import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.repository.TaskRepo
 
-class TaskViewModel : ViewModel() {
+class TaskViewModel(private val application: Application) : AndroidViewModel(application) {
+
     companion object {
         const val TAG = "TaskViewModel"
     }
 
-    private val dataSource = TaskRepo()
+    private val dataSource = TaskRepo.getInstance()
 
-    private val upcomingFilter = MutableLiveData(false)
-    fun setUpcomingFilter(b: Boolean) {
-        upcomingFilter.value = b
-    }
+    var currentTask = Task()
 
-    val currentList = MutableLiveData<ListInfo>()
-    fun setCurrentList(list: ListInfo) {
-        currentList.value = list
-    }
-
-    val allTasks = dataSource.getTasks()
-
-    val importantTasks = currentList.switchMap { list ->
-        upcomingFilter.switchMap { b ->
-            val id = list.id!!
-            if (!b) dataSource.getTasks(id, false, true)
-            else dataSource.getUpcomingTasks(id, false, true)
+    fun upsertTask() {
+        if (currentTask.title.isBlank()) {
+            currentTask.title = application.getString(R.string.default_task_title)
         }
+        dataSource.upsert(currentTask)
     }
 
-    val activeTasks = currentList.switchMap { list ->
-        upcomingFilter.switchMap { b ->
-            val id = list.id!!
-            if (!b) dataSource.getTasks(id)
-            else dataSource.getUpcomingTasks(id)
-        }
+    fun markCompleted(completed: Boolean) {
+        currentTask.completed = completed
+        dataSource.upsert(currentTask)
     }
 
-    val completedTasks = currentList.switchMap { list ->
-        upcomingFilter.switchMap { b ->
-            val id = list.id!!
-            if (!b) dataSource.getTasks(id, true)
-            else dataSource.getUpcomingTasks(id, true)
-        }
-    }
-
-    fun upsert(vararg tasks: Task) {
-        tasks.forEach {
-            if (it.listId.isNullOrEmpty()) { it.listId = currentList.value?.id!! }
-            if (it.createdAt == null) it.createdAt = Timestamp.now().toDate().time
-            dataSource.upsertTask(tasks = tasks)
-        }
-    }
-
-    fun delete(vararg tasks: Task) {
-        dataSource.deleteTask(tasks = tasks)
+    fun deleteTask() {
+        dataSource.delete(currentTask)
     }
 }
+

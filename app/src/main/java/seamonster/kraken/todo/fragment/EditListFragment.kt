@@ -1,48 +1,57 @@
 package seamonster.kraken.todo.fragment
 
-import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import seamonster.kraken.todo.R
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import seamonster.kraken.todo.databinding.FragmentEditListBinding
-import seamonster.kraken.todo.model.ListInfo
-import seamonster.kraken.todo.viewmodel.ListViewModel
+import seamonster.kraken.todo.model.TasksList
+import seamonster.kraken.todo.viewmodel.EditListViewModel
+import seamonster.kraken.todo.viewmodel.PageViewModel
 
-class EditListFragment : DialogFragment() {
+class EditListFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG: String = "EditListFragment"
     }
 
     private lateinit var binding: FragmentEditListBinding
-    private lateinit var viewModel: ListViewModel
-    var list = ListInfo()
+    private val viewModel: EditListViewModel by viewModels()
+    private lateinit var mainViewModel: PageViewModel
+    var mode = 0 // 0 for adding, 1 for editing
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
-
-        binding = FragmentEditListBinding.inflate(layoutInflater)
-        if (binding.list == null) binding.list = list
-
-        val dialog = Dialog(requireContext(), R.style.DialogTheme)
-        binding.buttonDone.setOnClickListener {
-            viewModel.upsert(list)
-            dialog.dismiss()
+    private fun getCurrentList(): TasksList{
+         if (mode == 1){
+            viewModel.currentList = mainViewModel.currentList.value!!
         }
-        binding.toolbar.setNavigationOnClickListener { dialog.cancel() }
-        dialog.window?.setWindowAnimations(R.style.DialogBottomUpAnimation)
-        dialog.setContentView(binding.root)
-        return dialog
+        return viewModel.currentList
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        mainViewModel = ViewModelProvider(requireActivity())[PageViewModel::class.java]
+        binding = FragmentEditListBinding.inflate(inflater, container, false)
+        binding.list = getCurrentList()
+        binding.buttonDone.setOnClickListener {
+            viewModel.upsert()
+            dismiss()
+        }
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        binding.textListName.requestFocus()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        binding.textListName.requestFocus() // focus on text field
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) // show soft keyboard
             binding.textListName.windowInsetsController?.show(WindowInsetsCompat.Type.ime())
         else {
             requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import seamonster.kraken.todo.model.Task
 import java.util.Calendar
@@ -15,6 +12,11 @@ import java.util.Calendar
 class TaskRepo {
     companion object {
         const val TAG = "FirestoreDatabase"
+        private var _instance: TaskRepo? = null
+        fun getInstance() : TaskRepo{
+            if (_instance == null) _instance = TaskRepo()
+            return _instance!!
+        }
     }
 
     private val currentUserEmail = Firebase.auth.currentUser?.email
@@ -105,7 +107,7 @@ class TaskRepo {
             }
         }
 
-    fun upsertTask(vararg tasks: Task) {
+    fun upsert(vararg tasks: Task) {
         tasks.forEach {
             (if (it.id == null) collectionReference.add(it)
             else collectionReference.document("${it.id}").set(it))
@@ -115,7 +117,7 @@ class TaskRepo {
         }
     }
 
-    fun deleteTask(vararg tasks: Task) {
+    fun delete(vararg tasks: Task) {
         tasks.forEach {
             collectionReference.document("${it.id}").delete()
                 .addOnFailureListener { e ->
@@ -124,11 +126,11 @@ class TaskRepo {
         }
     }
 
-    fun deleteTask(listId: String){
+    fun delete(listId: String){
         collectionReference.whereEqualTo("listId", listId).get().addOnSuccessListener {
             for (doc in it){
                 val task = doc.toObject(Task::class.java)
-                deleteTask(task)
+                delete(task)
             }
         }
     }

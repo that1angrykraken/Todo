@@ -37,7 +37,7 @@ class MarkCompletedService : Service() {
     }
 
     private fun updateTask(task: Task) {
-        TaskRepo().upsertTask(task)
+        TaskRepo().upsert(task)
     }
 
     private fun notification(): Notification {

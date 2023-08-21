@@ -74,6 +74,7 @@
     <string name="button_send">Gửi</string>
     <string name="feedback_sent">Phản hồi đã được gửi!</string>
     <string name="fields_empty">Vui lòng điền vào tất cả các trường!</string>
-    <string name="add_a_title">Thêm tiêu đề</string>
+    <string name="add_a_title">Tiêu đề</string>
     <string name="add_details">Thêm chi tiết</string>
+    <string name="default_list_name">Danh sách mới</string>
 </resources>

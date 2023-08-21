@@ -6,7 +6,7 @@
 
         <variable
             name="l"
-            type="seamonster.kraken.todo.model.ListInfo" />
+            type="seamonster.kraken.todo.model.TasksList" />
 
         <variable
             name="currentId"

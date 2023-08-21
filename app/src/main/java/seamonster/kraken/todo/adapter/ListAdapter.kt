@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import seamonster.kraken.todo.databinding.ListItemBinding
 import seamonster.kraken.todo.listener.ListItemListener
-import seamonster.kraken.todo.model.ListInfo
+import seamonster.kraken.todo.model.TasksList
 
 class ListAdapter(
-    var data: List<ListInfo>,
+    var data: List<TasksList>,
     private val currentListId: String,
     private val fragment: Fragment
 ) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {

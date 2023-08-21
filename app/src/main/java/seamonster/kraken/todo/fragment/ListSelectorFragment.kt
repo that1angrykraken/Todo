@@ -10,16 +10,20 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import seamonster.kraken.todo.adapter.ListAdapter
 import seamonster.kraken.todo.databinding.FragmentListSelectorBinding
 import seamonster.kraken.todo.listener.ListItemListener
-import seamonster.kraken.todo.model.ListInfo
+import seamonster.kraken.todo.model.TasksList
 import seamonster.kraken.todo.viewmodel.ListViewModel
-import seamonster.kraken.todo.viewmodel.TaskViewModel
+import seamonster.kraken.todo.viewmodel.PageViewModel
 import java.util.ArrayList
 
 class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
 
+    companion object {
+        const val TAG = "ListSelectorFragment"
+    }
+
     private lateinit var binding: FragmentListSelectorBinding
     private lateinit var listViewModel: ListViewModel
-    private lateinit var taskViewModel: TaskViewModel
+    private lateinit var pageViewModel: PageViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +31,7 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
         savedInstanceState: Bundle?
     ): View {
         listViewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
-        taskViewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
+        pageViewModel = ViewModelProvider(requireActivity())[PageViewModel::class.java]
         binding = FragmentListSelectorBinding.inflate(inflater, container, false)
         initLists()
         initButtonCreateList()
@@ -35,7 +39,7 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
     }
 
     private fun initLists() {
-        val adapter = ListAdapter(ArrayList(), taskViewModel.currentList.value?.id!!, this)
+        val adapter = ListAdapter(ArrayList(), pageViewModel.currentList.value?.id!!, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
         listViewModel.getLists.observeForever {
@@ -51,12 +55,8 @@ class ListSelectorFragment : BottomSheetDialogFragment(), ListItemListener {
         }
     }
 
-    companion object {
-        const val TAG = "ListSelectorFragment"
-    }
-
-    override fun onItemClicked(list: ListInfo) {
-        taskViewModel.setCurrentList(list)
+    override fun onItemClicked(list: TasksList) {
+        pageViewModel.setCurrentList(list)
         dismiss()
     }
 }
