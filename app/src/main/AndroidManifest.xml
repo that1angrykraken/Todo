@@ -20,11 +20,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Todo"
         tools:targetApi="33">
-
-        <receiver android:name=".util.NotificationReceiver" />
+        <receiver
+            android:name=".util.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.PACKAGE_FIRST_LAUNCH"/>
+            </intent-filter>
+        </receiver>
 
         <service android:name=".util.ScheduleTaskService" />
-
         <service android:name=".util.MarkCompletedService" />
 
         <activity

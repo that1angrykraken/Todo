@@ -31,7 +31,7 @@ class TasksListAdapter(private val listener: TaskItemListener) :
         with(holder.binding) {
             t = task
             if (task.year > 0) {
-                chipDateTime.text = AppUtil().convertDateTime(root.context, task)
+                chipDateTime.text = AppUtil(root.context).convertDateTime(task)
             }
             if (!AppUtil.afterNow(task) && task.year > 0) {
                 textTitle.setTextAppearance(R.style.TaskTitleUncompleted)

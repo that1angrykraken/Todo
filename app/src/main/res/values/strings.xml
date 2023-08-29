@@ -22,7 +22,6 @@
     <string name="mark_completed">Mark completed</string>
     <string name="mark_uncompleted">Mark uncompleted</string>
     <string name="my_tasks">My tasks</string>
-    <string name="edit_list">Edit list</string>
     <string name="select_a_list">Select a list</string>
     <string name="list_action">List action</string>
     <string name="button_done">Done</string>
@@ -47,11 +46,9 @@
     <string name="delete_dialog_message">All completed tasks in current list will be permanently delete.</string>
     <string name="delete_list_dialog_title">Delete current list?</string>
     <string name="delete_list_dialog_message">This list and all related tasks will be delete permanently.</string>
-    <string name="notification_channel_name">Main channel</string>
     <string name="create_new_list">Create new list</string>
     <string name="notification_permission_require_message">Whenever you change your mind, you can turn on notifications for this app by going to <b>System settings > Notifications > App settings</b>.</string>
     <string name="notification_permission_require_title">Permission denied!</string>
-    <string name="sign_in_with_google">Sign in with Google</string>
     <string name="please_wait">Please wait..</string>
     <string name="sign_in_required">Please sign in to continue</string>
     <string name="signing_in">Signing in as %s</string>
@@ -59,19 +56,11 @@
     <string name="request_permission_dialog_title">Turn on notifications!</string>
     <string name="request_permission_dialog_desc"><b>Tasks</b> needs notifications permission to be turned on to notify you when it\'s time to do your tasks.</string>
     <string name="skip">Skip</string>
-    <string name="feedback">Feedback</string>
     <string name="sign_out">Sign out</string>
     <string name="settings">Settings</string>
     <string name="manage_google_account">Manage your Google Account</string>
     <string name="sign_in">Sign in with Google</string>
     <string name="close">Close</string>
-    <string name="lang_en" translatable="false">English</string>
-    <string name="lang_vi" translatable="false">Tiếng Việt</string>
-    <string name="dark_mode_system">System</string>
-    <string name="dark_mode_on">On</string>
-    <string name="dark_mode_off">Off</string>
-    <string name="language">Language</string>
-    <string name="dark_mode">Dark mode</string>
     <string name="send_feedback">Send feedback</string>
     <string name="button_send">Send</string>
     <string name="feedback_sent">Feedback sent!</string>
@@ -79,4 +68,11 @@
     <string name="add_a_title">Enter title</string>
     <string name="add_details">Add details</string>
     <string name="default_list_name">New list</string>
+    <string name="remider_content_text">Tap to see your upcoming tasks</string>
+    <string name="reminder_content_title">You have %d task(s) to do tomorrow!</string>
+    <string name="reminder_content_title_no_tasks">You don\'t have any tasks tomorrow!</string>
+    <string name="reminder_channel_name">Reminder</string>
+    <string name="main_channel_name">Main channel</string>
+    <string name="background_service_channel_name">Background service</string>
+    <string name="tasks_scheduler">Tasks scheduler</string>
 </resources>

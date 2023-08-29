@@ -1,12 +1,10 @@
 package seamonster.kraken.todo.fragment
 
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.ktx.auth
@@ -15,6 +13,7 @@ import com.squareup.picasso.Picasso
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.activity.SignInActivity
 import seamonster.kraken.todo.databinding.DialogOptionBinding
+import seamonster.kraken.todo.util.AppUtil
 import seamonster.kraken.todo.viewmodel.UserViewModel
 
 class OptionDialogFragment : DialogFragment() {
@@ -47,6 +46,7 @@ class OptionDialogFragment : DialogFragment() {
         binding.buttonClose.setOnClickListener { dismiss() }
         binding.buttonSignOut.setOnClickListener {
             Firebase.auth.signOut()
+            AppUtil(requireContext()).cancelAllWork()
             startActivity(Intent(requireContext(), SignInActivity::class.java))
         }
         binding.buttonSettings.setOnClickListener {

@@ -29,8 +29,9 @@ class EditTaskFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         pageViewModel = ViewModelProvider(requireActivity())[PageViewModel::class.java]
-        binding = FragmentEditTaskBinding.inflate(layoutInflater)
         viewModel.currentTask = pageViewModel.currentTask
+
+        binding = FragmentEditTaskBinding.inflate(layoutInflater)
         binding.t = viewModel.currentTask
 
         return Dialog(requireContext(), R.style.DialogTheme).also {
@@ -51,7 +52,7 @@ class EditTaskFragment : DialogFragment() {
 
     private fun initButtonSetDateTime() {
         if (viewModel.currentTask.year > 0) {
-            binding.chipDateTime.text = AppUtil().convertDateTime(requireContext(), viewModel.currentTask)
+            binding.chipDateTime.text = AppUtil(requireContext()).convertDateTime(viewModel.currentTask)
         }
         binding.cardDateTime.setOnClickListener {
             showDatePicker()
@@ -93,9 +94,9 @@ class EditTaskFragment : DialogFragment() {
                 it.set(Calendar.HOUR_OF_DAY, timePicker.hour)
                 it.set(Calendar.MINUTE, timePicker.minute)
             }
-            AppUtil.parseDateTimeToTask(calendar, viewModel.currentTask)
+            viewModel.currentTask.convertDateTime(calendar)
             binding.chipDateTime.text =
-                AppUtil().convertDateTime(requireContext(), viewModel.currentTask)
+                AppUtil(requireContext()).convertDateTime(viewModel.currentTask)
         }
         timePicker.show(parentFragmentManager, null)
     }

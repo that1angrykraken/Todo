@@ -23,7 +23,6 @@
     <string name="mark_completed">Đánh dấu đã hoàn thành</string>
     <string name="mark_uncompleted">Đánh dấu chưa hoàn thành</string>
     <string name="my_tasks">Việc cần làm của tôi</string>
-    <string name="edit_list">Chỉnh sửa danh sách</string>
     <string name="select_a_list">Chọn một danh sách</string>
     <string name="list_action">Thao tác với danh sách</string>
     <string name="button_done">Xong</string>
@@ -47,11 +46,9 @@
     <string name="delete_dialog_message">Tất cả các việc cần làm trong danh sách hiện tại sẽ bị xóa vĩnh viễn.</string>
     <string name="delete_list_dialog_title">Xóa danh sách hiện tại?</string>
     <string name="delete_list_dialog_message">Danh sách này cùng các việc cần làm liên quan sẽ bị xóa vĩnh viễn.</string>
-    <string name="notification_channel_name">Kênh chính</string>
     <string name="create_new_list">Tạo danh sách mới</string>
     <string name="notification_permission_require_message">Bất cứ khi nào bạn thay đổi ý định, bạn có thể bật thông báo cho ứng dụng này bằng cách đi tới <b>Cài đặt hệ thống > Thông báo > Cài đặt ứng dụng</b>.</string>
     <string name="notification_permission_require_title">Thông báo bị từ chối!</string>
-    <string name="sign_in_with_google">Đăng nhập bằng Google</string>
     <string name="please_wait">Vui lòng đợi..</string>
     <string name="sign_in_required">Vui lòng đăng nhập để tiếp tục</string>
     <string name="signing_in">Đăng nhập với tư cách %s</string>
@@ -59,17 +56,11 @@
     <string name="request_permission_dialog_title">Bật thông báo!</string>
     <string name="request_permission_dialog_desc"><b>Tasks</b> cần quyền thông báo để cho bạn biết khi đến giờ làm các công việc của bạn.</string>
     <string name="skip">Bỏ qua</string>
-    <string name="feedback">Phản hồi</string>
     <string name="sign_out">Đăng xuất</string>
     <string name="settings">Cài đặt</string>
     <string name="manage_google_account">Quản lý Tài khoản Google của bạn</string>
     <string name="sign_in">Đăng nhập bằng Google</string>
     <string name="close">Đóng</string>
-    <string name="dark_mode_system">Hệ thống</string>
-    <string name="dark_mode_on">Bật</string>
-    <string name="dark_mode_off">Tắt</string>
-    <string name="language">Ngôn ngữ</string>
-    <string name="dark_mode">Chế đối tối</string>
     <string name="send_feedback">Gửi phản hồi</string>
     <string name="button_send">Gửi</string>
     <string name="feedback_sent">Phản hồi đã được gửi!</string>
@@ -77,4 +68,11 @@
     <string name="add_a_title">Tiêu đề</string>
     <string name="add_details">Thêm chi tiết</string>
     <string name="default_list_name">Danh sách mới</string>
+    <string name="remider_content_text">Nhấn vào để xem các việc cần làm sắp tới.</string>
+    <string name="reminder_content_title">Bạn có %d việc cần làm vào ngày mai</string>
+    <string name="reminder_content_title_no_tasks">Ngày mai bạn rảnh!</string>
+    <string name="reminder_channel_name">Nhắc nhở</string>
+    <string name="main_channel_name">Kênh chính</string>
+    <string name="background_service_channel_name">Dịch vụ chạy nền</string>
+    <string name="tasks_scheduler">Lên lịch việc cần làm</string>
 </resources>

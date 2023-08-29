@@ -1,17 +1,104 @@
 package seamonster.kraken.todo.util
 
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.model.Task
-import seamonster.kraken.todo.repository.LocalData
 import java.util.Calendar
-import java.util.Locale
+import java.util.concurrent.TimeUnit
 
-class AppUtil {
+class AppUtil(private val context: Context) {
 
-    fun convertDateTime(context: Context, t: Task): String {
+    private val workManager = WorkManager.getInstance(context)
+
+    @Suppress("DEPRECATION")
+    fun startBackgroundService(){
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningServices = activityManager.getRunningServices(Int.MAX_VALUE)
+        val className = ScheduleTaskService::class.java.name
+        val check = runningServices.any { it.service.className == className }
+        if (!check) {
+            Log.d(TAG, "startBackgroundService: $className")
+            context.startForegroundService(Intent(context, ScheduleTaskService::class.java))
+        }
+    }
+
+    fun scheduleTask(task: Task) {
+        if (!afterNow(task)) return
+        val data = task.convertToData()
+        val delay = task.getDateTime().timeInMillis - System.currentTimeMillis()
+        val request = OneTimeWorkRequestBuilder<NotificationWorker>()
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .setConstraints(constraints())
+            .setInputData(data)
+            .addTag("task")
+            .build()
+        workManager.enqueueUniqueWork(task.id!!, ExistingWorkPolicy.REPLACE, request)
+        Log.d(TAG, "scheduleTask: scheduled - ${task.id}")
+    }
+
+    fun scheduleTasks(){
+        val constraints = Constraints.Builder()
+            .setRequiresDeviceIdle(false)
+            .setRequiresBatteryNotLow(false)
+            .build()
+        val request = OneTimeWorkRequestBuilder<SignInCompletedWorker>()
+            .setConstraints(constraints)
+            .build()
+        workManager.enqueue(request)
+    }
+
+    fun cancelTask(task: Task){
+        workManager.cancelUniqueWork(task.id!!)
+        Log.d(TAG, "cancelTask: canceled - ${task.id}")
+    }
+
+    fun cancelAllWork(){
+        workManager.cancelAllWork()
+    }
+
+    fun startReminder() {
+        val timeAt = Calendar.getInstance().apply {
+            if (get(Calendar.HOUR_OF_DAY) >= 21) {
+                set(Calendar.DATE, get(Calendar.DATE) + 1)
+            }
+            set(Calendar.HOUR_OF_DAY, 21)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }.timeInMillis
+        val timeDiff = timeAt - System.currentTimeMillis()
+        val request = PeriodicWorkRequestBuilder<ReminderTasksWorker>(1, TimeUnit.DAYS)
+            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+            .setConstraints(constraints())
+            .addTag("daily reminder")
+            .build()
+
+        workManager
+            .enqueueUniquePeriodicWork(
+                "reminder",
+                ExistingPeriodicWorkPolicy.KEEP,
+                request
+            )
+    }
+
+    private fun constraints() : Constraints{
+        return Constraints.Builder()
+            .setRequiresDeviceIdle(false)
+            .setRequiresBatteryNotLow(false)
+            .build()
+    }
+
+    fun convertDateTime(t: Task): String {
         val c1 = Calendar.getInstance()
         val c2 = getDateTimeFrom(t)
         val datePart = if (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&
@@ -31,31 +118,13 @@ class AppUtil {
     }
 
     companion object {
+        const val TAG = "AppUtil"
 
-        fun updateResources(context: Context, lang: String) : Context{
-            val locale = Locale(lang)
-            Locale.setDefault(locale)
-
-            val configuration = context.resources.configuration
-            configuration.setLocale(locale)
-            configuration.setLayoutDirection(locale)
-
-            return context.createConfigurationContext(configuration)
-        }
-
-        fun updateDateTime(t: Task, field: Int, i: Int) {
+        private fun updateDateTime(t: Task, field: Int, i: Int) {
             val c = Calendar.getInstance().apply {
                 set(t.year, t.month, t.date, t.hour, t.minute)
                 set(field, get(field) + i)
             }
-            t.year = c.get(Calendar.YEAR)
-            t.month = c.get(Calendar.MONTH)
-            t.date = c.get(Calendar.DATE)
-            t.hour = c.get(Calendar.HOUR_OF_DAY)
-            t.minute = c.get(Calendar.MINUTE)
-        }
-
-        fun parseDateTimeToTask(c: Calendar, t: Task) {
             t.year = c.get(Calendar.YEAR)
             t.month = c.get(Calendar.MONTH)
             t.date = c.get(Calendar.DATE)
@@ -84,7 +153,17 @@ class AppUtil {
             if (bundle == null) return null
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 bundle.getSerializable("task", Task::class.java)
-            else @Suppress("DEPRECATION") bundle.getSerializable("task") as Task
+            else
+                @Suppress("DEPRECATION") bundle.getSerializable("task") as Task
+        }
+
+        fun updateDateTime(task: Task) {
+            when (task.repeat) {
+                1 -> updateDateTime(task, Calendar.DATE, 1)
+                2 -> updateDateTime(task, Calendar.DATE, 7)
+                3 -> updateDateTime(task, Calendar.MONTH, 1)
+                4 -> updateDateTime(task, Calendar.YEAR, 1)
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import com.google.firebase.Timestamp
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.model.TasksList
 import seamonster.kraken.todo.model.Task
+import seamonster.kraken.todo.repository.ListRepo
 import seamonster.kraken.todo.repository.TaskRepo
 
 class PageViewModel(private val application: Application) : AndroidViewModel(application){
@@ -36,12 +37,14 @@ class PageViewModel(private val application: Application) : AndroidViewModel(app
             field = value
         }
 
-    val currentList = MutableLiveData<TasksList>()
+    val currentList = MutableLiveData(TasksList().apply {
+        id = "0"
+        name = application.getString(R.string.my_tasks)
+        ListRepo.getInstance().upsertList(this)
+    })
     fun setCurrentList(list: TasksList) {
         currentList.value = list
     }
-
-    val allTasks = dataSource.getTasks()
 
     val importantTasks = currentList.switchMap { list ->
         upcomingFilter.switchMap { b ->

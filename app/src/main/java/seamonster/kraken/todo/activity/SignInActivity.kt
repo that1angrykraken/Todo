@@ -18,7 +18,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.databinding.ActivitySignInBinding
-import seamonster.kraken.todo.util.AppUtil
 
 class SignInActivity : AppCompatActivity() {
     companion object {
@@ -128,5 +127,4 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
-
 }

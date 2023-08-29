@@ -3,6 +3,7 @@ package seamonster.kraken.todo.repository
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
@@ -22,17 +23,8 @@ class TaskRepo {
     private val currentUserEmail = Firebase.auth.currentUser?.email
     private val collectionReference = DataSource.taskReference(currentUserEmail)
 
-    fun getTasks(): MutableLiveData<List<Task>> {
-        val mutableLiveData = MutableLiveData<List<Task>>()
-        if (currentUserEmail != null) {
-            collectionReference
-                .whereEqualTo("completed", false)
-                .orderBy("year").orderBy("month").orderBy("date")
-                .orderBy("hour").orderBy("minute")
-                .whereGreaterThan("year", 0)
-                .addSnapshotListener(snapshotListener(mutableLiveData))
-        }
-        return mutableLiveData
+    fun getColRef() : CollectionReference{
+        return collectionReference
     }
 
     fun getUpcomingTasks(

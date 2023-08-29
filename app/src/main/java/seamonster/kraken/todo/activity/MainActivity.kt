@@ -25,12 +25,8 @@ import seamonster.kraken.todo.fragment.EditTaskFragment
 import seamonster.kraken.todo.fragment.ListActionFragment
 import seamonster.kraken.todo.fragment.ListSelectorFragment
 import seamonster.kraken.todo.fragment.OptionDialogFragment
-import seamonster.kraken.todo.model.TasksList
-import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.repository.LocalData
 import seamonster.kraken.todo.util.AppUtil
-import seamonster.kraken.todo.util.ScheduleTaskService
-import seamonster.kraken.todo.viewmodel.ListViewModel
 import seamonster.kraken.todo.viewmodel.PageViewModel
 import seamonster.kraken.todo.viewmodel.UserViewModel
 
@@ -39,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val userViewModel: UserViewModel by viewModels()
     private val pageViewModel: PageViewModel by viewModels()
-    private val listViewModel: ListViewModel by viewModels()
     private lateinit var localData: LocalData
 
     companion object {
@@ -61,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initCurrentUser() {
         userViewModel.currentUser.observeForever {
-            if (it != null){
+            if (it != null) {
                 Picasso.get().load(it.photoUrl).into(binding.buttonCurrentUser)
                 initButtonCurrentUser()
                 requestPermission()
@@ -81,7 +76,10 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-                    initScheduler()
+                    val util = AppUtil(this)
+                    util.startReminder()
+                    util.scheduleTasks()
+                    util.startBackgroundService()
                 }
 
                 shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
@@ -99,16 +97,8 @@ class MainActivity : AppCompatActivity() {
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { _ ->
+    ) {
         requestPermission()
-    }
-
-    private fun initScheduler() {
-        pageViewModel.allTasks.observeForever { tasks ->
-            if (tasks.isNotEmpty()) {
-                startForegroundService(Intent(this, ScheduleTaskService::class.java))
-            }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -139,28 +129,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeComponents() {
         initButtonSelectList()
-        initDefaultList()
         initTabs()
         initPager()
         initFabAddTask()
-        initChipUpcomingFilter()
         initButtonListAction()
+        initChipUpcomingFilter()
         showTaskFromNotification()
-    }
-
-    private fun initDefaultList() {
-        val list = TasksList().apply {
-            id = "0"
-            name = getString(R.string.my_tasks)
-        }
-        listViewModel.upsert(list)
-        pageViewModel.setCurrentList(list)
     }
 
     private fun showTaskFromNotification() {
         val task = AppUtil.getTaskFromBundle(intent.extras)
         if (task != null) {
-            showEditTaskDialog(task)
+            pageViewModel.currentTask = task
+            showEditTaskDialog()
+            intent.putExtras(Bundle()) // empty extras
         }
     }
 
@@ -172,6 +154,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initChipUpcomingFilter() {
+        val upcoming = intent.extras?.getBoolean("upcoming") ?: false
+        binding.checkboxUpcomingFilter.isChecked = upcoming
         binding.checkboxUpcomingFilter.setOnClickListener {
             pageViewModel.setUpcomingFilter(binding.checkboxUpcomingFilter.isChecked)
         }
@@ -191,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         binding.fabAddTask.setOnClickListener { showEditTaskDialog() }
     }
 
-    private fun showEditTaskDialog(task: Task = Task()) {
+    private fun showEditTaskDialog() {
         val dialog = EditTaskFragment()
         dialog.show(supportFragmentManager, EditTaskFragment.TAG)
     }

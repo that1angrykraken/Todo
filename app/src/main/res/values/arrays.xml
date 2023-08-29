@@ -7,13 +7,4 @@
         <item>@string/monthly</item>
         <item>@string/yearly</item>
     </array>
-    <array name="languages">
-        <item>@string/lang_en</item>
-        <item>@string/lang_vi</item>
-    </array>
-    <array name="force_dark_mode">
-        <item>@string/dark_mode_system</item>
-        <item>@string/dark_mode_on</item>
-        <item>@string/dark_mode_off</item>
-    </array>
 </resources>
