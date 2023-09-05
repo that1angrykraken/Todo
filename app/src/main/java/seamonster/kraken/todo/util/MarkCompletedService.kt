@@ -23,7 +23,7 @@ class MarkCompletedService : Service() {
         val task = AppUtil.getTaskFromBundle(intent.extras)
         val notificationId = intent.extras?.getInt("notificationId",0)
         if (task != null && notificationId != null) {
-            updateTask(task.also { it.completed = true })
+            updateTask(task)
             cancelNotification(notificationId)
         }
         stopSelf()
@@ -37,6 +37,8 @@ class MarkCompletedService : Service() {
     }
 
     private fun updateTask(task: Task) {
+        task.completed = true
+        if (task.repeat != 0) task.id = null
         TaskRepo().upsert(task)
     }
 

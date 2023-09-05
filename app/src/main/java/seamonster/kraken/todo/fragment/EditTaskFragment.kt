@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
 import seamonster.kraken.todo.R
@@ -52,7 +53,8 @@ class EditTaskFragment : DialogFragment() {
 
     private fun initButtonSetDateTime() {
         if (viewModel.currentTask.year > 0) {
-            binding.chipDateTime.text = AppUtil(requireContext()).convertDateTime(viewModel.currentTask)
+            binding.chipDateTime.text =
+                AppUtil(requireContext()).convertDateTime(viewModel.currentTask)
         }
         binding.cardDateTime.setOnClickListener {
             showDatePicker()
@@ -94,7 +96,7 @@ class EditTaskFragment : DialogFragment() {
                 it.set(Calendar.HOUR_OF_DAY, timePicker.hour)
                 it.set(Calendar.MINUTE, timePicker.minute)
             }
-            viewModel.currentTask.convertDateTime(calendar)
+            viewModel.currentTask.dateTimeFrom(calendar)
             binding.chipDateTime.text =
                 AppUtil(requireContext()).convertDateTime(viewModel.currentTask)
         }
@@ -122,8 +124,20 @@ class EditTaskFragment : DialogFragment() {
 
     private fun initButtonSave(dialog: Dialog) {
         binding.buttonSave.setOnClickListener {
-            viewModel.upsertTask()
-            dialog.dismiss()
+            var check = pageViewModel.anyDuplicatedDateTimeTasks()
+            if (check) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setMessage(getString(R.string.similar_date_time_message))
+                    .setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ -> }
+                    .setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ ->
+                        viewModel.upsertTask()
+                        dialog.dismiss()
+                    }.show()
+            }
+            else{
+                viewModel.upsertTask()
+                dialog.dismiss()
+            }
         }
     }
 

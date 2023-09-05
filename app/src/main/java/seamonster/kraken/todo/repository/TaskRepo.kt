@@ -66,7 +66,9 @@ class TaskRepo {
                         val data = ArrayList<Task>()
                         for (doc in snapshot.documents) {
                             val task = doc.toObject(Task::class.java)
-                            task?.let { it.id = doc.id }
+                            if (task != null) {
+                                task.id = doc.id
+                            }
                             data.add(task!!)
                         }
                         mutableLiveData.value = data

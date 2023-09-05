@@ -11,7 +11,7 @@ import seamonster.kraken.todo.model.Task
 import seamonster.kraken.todo.repository.ListRepo
 import seamonster.kraken.todo.repository.TaskRepo
 
-class PageViewModel(private val application: Application) : AndroidViewModel(application){
+class PageViewModel(private val application: Application) : AndroidViewModel(application) {
     companion object {
         const val TAG = "TaskViewModel"
     }
@@ -25,7 +25,7 @@ class PageViewModel(private val application: Application) : AndroidViewModel(app
 
     var currentTask = Task()
         get() {
-            if (field.listId.isNullOrEmpty()){
+            if (field.listId.isNullOrEmpty()) {
                 field.listId = currentList.value!!.id
             }
             return field
@@ -42,6 +42,7 @@ class PageViewModel(private val application: Application) : AndroidViewModel(app
         name = application.getString(R.string.my_tasks)
         ListRepo.getInstance().upsertList(this)
     })
+
     fun setCurrentList(list: TasksList) {
         currentList.value = list
     }
@@ -70,10 +71,23 @@ class PageViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
+    fun anyDuplicatedDateTimeTasks(): Boolean {
+        return activeTasks.value?.any {
+            it.year == currentTask.year &&
+            it.month == currentTask.month &&
+            it.date == currentTask.date &&
+            it.hour == currentTask.hour &&
+            it.minute == currentTask.minute &&
+            it.id != currentTask.id
+        } ?: false
+    }
+
     fun upsert(vararg tasks: Task) {
         tasks.forEach {
-            if (it.listId.isNullOrEmpty()) { it.listId = currentList.value?.id!! }
-            if (it.createdAt == null) it.createdAt = Timestamp.now().toDate().time
+            if (it.listId.isNullOrEmpty()) {
+                it.listId = currentList.value?.id!!
+                it.createdAt = System.currentTimeMillis()
+            }
             if (it.title.isBlank()) it.title = application.getString(R.string.default_task_title)
         }
         dataSource.upsert(tasks = tasks)

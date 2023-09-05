@@ -27,7 +27,7 @@
     <string name="list_action">Thao tác với danh sách</string>
     <string name="button_done">Xong</string>
     <string name="enter_list_title">Nhập tiêu đề của danh sách</string>
-    <string name="important">Dấu sao</string>
+    <string name="important">Quan trọng</string>
     <string name="completed">Hoàn thành</string>
     <string name="select_date">Chọn ngày</string>
     <string name="repeat_frequency">Tần suất lặp lại</string>
@@ -75,4 +75,5 @@
     <string name="main_channel_name">Kênh chính</string>
     <string name="background_service_channel_name">Dịch vụ chạy nền</string>
     <string name="tasks_scheduler">Lên lịch việc cần làm</string>
+    <string name="similar_date_time_message">Có một hoặc nhiều việc cần làm có cùng thời gian với thời gian bạn đã chọn, bạn có muốn lưu lại việc cần làm hiện tại không?</string>
 </resources>

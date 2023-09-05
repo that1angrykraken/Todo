@@ -36,7 +36,7 @@ class AppUtil(private val context: Context) {
     fun scheduleTask(task: Task) {
         if (!afterNow(task)) return
         val data = task.convertToData()
-        val delay = task.getDateTime().timeInMillis - System.currentTimeMillis()
+        val delay = task.dateTime().timeInMillis - System.currentTimeMillis()
         val request = OneTimeWorkRequestBuilder<NotificationWorker>()
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .setConstraints(constraints())
@@ -49,7 +49,6 @@ class AppUtil(private val context: Context) {
 
     fun scheduleTasks(){
         val constraints = Constraints.Builder()
-            .setRequiresDeviceIdle(false)
             .setRequiresBatteryNotLow(false)
             .build()
         val request = OneTimeWorkRequestBuilder<SignInCompletedWorker>()

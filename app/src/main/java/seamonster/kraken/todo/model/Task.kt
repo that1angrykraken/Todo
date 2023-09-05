@@ -89,13 +89,13 @@ class Task : BaseObservable(), Serializable {
 
     var createdAt: Long? = null
 
-    fun getDateTime(): Calendar {
+    fun dateTime(): Calendar {
         return Calendar.getInstance().apply {
             set(year, month, date, hour, minute, 0)
         }
     }
 
-    fun convertDateTime(calendar: Calendar) {
+    fun dateTimeFrom(calendar: Calendar) {
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
         date = calendar.get(Calendar.DATE)
@@ -110,6 +110,7 @@ class Task : BaseObservable(), Serializable {
             .putString("desc", desc)
             .putString("listId", listId)
             .putBoolean("completed", completed)
+            .putBoolean("important", important)
             .putInt("repeat", repeat)
             .putLong("createdAt", createdAt ?: 0)
             .putInt("year", year)

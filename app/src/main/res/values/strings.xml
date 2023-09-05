@@ -26,7 +26,7 @@
     <string name="list_action">List action</string>
     <string name="button_done">Done</string>
     <string name="enter_list_title">Enter list title</string>
-    <string name="important">Starred</string>
+    <string name="important">Important</string>
     <string name="completed">Completed</string>
     <string name="select_date">Select date</string>
     <string name="repeat_frequency">Repeat frequency</string>
@@ -75,4 +75,5 @@
     <string name="main_channel_name">Main channel</string>
     <string name="background_service_channel_name">Background service</string>
     <string name="tasks_scheduler">Tasks scheduler</string>
+    <string name="similar_date_time_message">There is one or more tasks have similar date time with the one you picked, do you want to save the current task?</string>
 </resources>

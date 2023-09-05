@@ -140,9 +140,9 @@ class MainActivity : AppCompatActivity() {
     private fun showTaskFromNotification() {
         val task = AppUtil.getTaskFromBundle(intent.extras)
         if (task != null) {
+            intent.putExtras(Bundle()) // empty extras
             pageViewModel.currentTask = task
             showEditTaskDialog()
-            intent.putExtras(Bundle()) // empty extras
         }
     }
 
@@ -155,7 +155,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChipUpcomingFilter() {
         val upcoming = intent.extras?.getBoolean("upcoming") ?: false
-        binding.checkboxUpcomingFilter.isChecked = upcoming
+        if (upcoming) {
+            binding.checkboxUpcomingFilter.isChecked = true
+            pageViewModel.setUpcomingFilter(true)
+        }
         binding.checkboxUpcomingFilter.setOnClickListener {
             pageViewModel.setUpcomingFilter(binding.checkboxUpcomingFilter.isChecked)
         }

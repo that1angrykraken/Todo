@@ -24,8 +24,6 @@ class NotificationWorker(private val context: Context, params: WorkerParameters)
     companion object {
         const val TAG = "NotificationWorker"
         const val CHANNEL_ID = "MAIN_CHANNEL"
-        const val GROUP_KEY = "Tasks"
-        const val HIGH_PRIORITY_GROUP_KEY = "Important tasks"
     }
 
     private val repo = TaskRepo.getInstance()
@@ -45,16 +43,17 @@ class NotificationWorker(private val context: Context, params: WorkerParameters)
             .setContentIntent(contentIntent(bundle))
             .setStyle(BigTextStyle().bigText(task.desc))
             .setPriority(if (task.important) PRIORITY_MAX else PRIORITY_HIGH)
-            .setGroup(if (task.important) HIGH_PRIORITY_GROUP_KEY else GROUP_KEY)
-            .setGroupSummary(true)
+            .setWhen(task.dateTime().timeInMillis)
+            .setSubText(if (task.important) context.getString(R.string.important) else null)
             .addAction(actionMarkCompleted(bundle))
             .setAutoCancel(true)
             .build()
-        notify(notification)
+        val id = (task.createdAt ?: System.currentTimeMillis()).toInt()
+        notify(id, notification)
         updateTask(task)
     }
 
-    private fun notify(notification: Notification){
+    private fun notify(id: Int, notification: Notification){
         with(NotificationManagerCompat.from(context)) {
             if (getNotificationChannel(CHANNEL_ID) == null) { // create a notification channel
                 val channel = NotificationChannelCompat
@@ -66,7 +65,7 @@ class NotificationWorker(private val context: Context, params: WorkerParameters)
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                notify(System.currentTimeMillis().toInt(), notification)
+                notify(id, notification)
                 Log.d(TAG, "notify: ok")
             }
         }
