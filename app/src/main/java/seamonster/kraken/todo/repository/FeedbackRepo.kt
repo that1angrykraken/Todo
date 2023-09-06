@@ -8,7 +8,7 @@ class FeedbackRepo {
         const val TAG = "FeedbackRepo"
     }
 
-    val collectionReference = DataSource.feedbackReference()
+    private val collectionReference = DataSource.feedbackReference()
 
     fun add(feedback: Feedback){
         collectionReference.add(feedback)

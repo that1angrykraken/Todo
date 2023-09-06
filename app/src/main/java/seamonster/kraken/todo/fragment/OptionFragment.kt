@@ -45,8 +45,7 @@ class OptionDialogFragment : DialogFragment() {
     private fun initializeComponents() {
         binding.buttonClose.setOnClickListener { dismiss() }
         binding.buttonSignOut.setOnClickListener {
-            Firebase.auth.signOut()
-            AppUtil(requireContext()).cancelAllWork()
+            AppUtil(requireContext()).signOut()
             startActivity(Intent(requireContext(), SignInActivity::class.java))
         }
         binding.buttonSettings.setOnClickListener {

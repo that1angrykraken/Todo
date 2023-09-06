@@ -7,7 +7,7 @@ import seamonster.kraken.todo.model.TasksList
 import seamonster.kraken.todo.repository.ListRepo
 
 class EditListViewModel(private val application: Application) : AndroidViewModel(application) {
-    private val repo = ListRepo.getInstance()
+    private val repo = ListRepo()
     private val lists = repo.getAll()
     var currentList = TasksList()
 

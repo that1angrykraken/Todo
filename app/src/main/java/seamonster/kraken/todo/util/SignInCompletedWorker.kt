@@ -9,7 +9,7 @@ import seamonster.kraken.todo.repository.TaskRepo
 class SignInCompletedWorker(private val context: Context, params: WorkerParameters) :
     Worker(context, params) {
     override fun doWork(): Result {
-        val colRef = TaskRepo.getInstance().getColRef()
+        val colRef = TaskRepo().getColRef()
         val util = AppUtil(context)
         colRef.get().addOnSuccessListener { snapshot ->
             snapshot.documents.forEach {

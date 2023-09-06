@@ -11,6 +11,8 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,6 +38,11 @@ class MainActivity : AppCompatActivity() {
     private val userViewModel: UserViewModel by viewModels()
     private val pageViewModel: PageViewModel by viewModels()
     private lateinit var localData: LocalData
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ViewModelStore().clear()
+    }
 
     companion object {
         const val TAG: String = "MainActivity"

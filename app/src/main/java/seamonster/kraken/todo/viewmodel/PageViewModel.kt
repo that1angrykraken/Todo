@@ -16,7 +16,7 @@ class PageViewModel(private val application: Application) : AndroidViewModel(app
         const val TAG = "TaskViewModel"
     }
 
-    private val dataSource = TaskRepo.getInstance()
+    private val dataSource = TaskRepo()
 
     private val upcomingFilter = MutableLiveData(false)
     fun setUpcomingFilter(b: Boolean) {
@@ -40,7 +40,7 @@ class PageViewModel(private val application: Application) : AndroidViewModel(app
     val currentList = MutableLiveData(TasksList().apply {
         id = "0"
         name = application.getString(R.string.my_tasks)
-        ListRepo.getInstance().upsertList(this)
+        ListRepo().upsertList(this)
     })
 
     fun setCurrentList(list: TasksList) {

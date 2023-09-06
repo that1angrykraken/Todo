@@ -10,7 +10,7 @@ class ListViewModel: ViewModel() {
         const val TAG = "ListViewModel"
     }
 
-    private val dataSource = ListRepo.getInstance()
+    private val dataSource = ListRepo()
 
     val getLists = dataSource.getAll()
 

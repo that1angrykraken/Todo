@@ -26,7 +26,7 @@ class NotificationWorker(private val context: Context, params: WorkerParameters)
         const val CHANNEL_ID = "MAIN_CHANNEL"
     }
 
-    private val repo = TaskRepo.getInstance()
+    private val repo = TaskRepo()
 
     override fun doWork(): Result {
         val task = Task().apply { fromData(inputData) }

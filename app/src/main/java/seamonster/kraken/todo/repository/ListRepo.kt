@@ -10,13 +10,6 @@ import java.util.Date
 class ListRepo {
     companion object {
         const val TAG = "ListRepo"
-        private var _instance: ListRepo? = null
-        fun getInstance(): ListRepo {
-            if (_instance == null) {
-                _instance = ListRepo()
-            }
-            return _instance!!
-        }
     }
 
     private val currentUserEmail = Firebase.auth.currentUser?.email

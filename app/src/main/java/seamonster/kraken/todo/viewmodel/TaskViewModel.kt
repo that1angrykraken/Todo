@@ -16,7 +16,7 @@ class TaskViewModel(private val application: Application) : AndroidViewModel(app
         const val TAG = "TaskViewModel"
     }
 
-    private val dataSource = TaskRepo.getInstance()
+    private val dataSource = TaskRepo()
 
     var currentTask = Task()
 

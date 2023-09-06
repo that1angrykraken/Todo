@@ -13,11 +13,6 @@ import java.util.Calendar
 class TaskRepo {
     companion object {
         const val TAG = "FirestoreDatabase"
-        private var _instance: TaskRepo? = null
-        fun getInstance() : TaskRepo{
-            if (_instance == null) _instance = TaskRepo()
-            return _instance!!
-        }
     }
 
     private val currentUserEmail = Firebase.auth.currentUser?.email

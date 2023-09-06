@@ -12,6 +12,8 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import seamonster.kraken.todo.R
 import seamonster.kraken.todo.model.Task
 import java.util.Calendar
@@ -62,8 +64,10 @@ class AppUtil(private val context: Context) {
         Log.d(TAG, "cancelTask: canceled - ${task.id}")
     }
 
-    fun cancelAllWork(){
+    fun signOut(){
+        Firebase.auth.signOut()
         workManager.cancelAllWork()
+        context.stopService(Intent(context, ScheduleTaskService::class.java))
     }
 
     fun startReminder() {
