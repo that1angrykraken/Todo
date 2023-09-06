@@ -73,10 +73,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
+        val util = AppUtil(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-                    val util = AppUtil(this)
                     util.startReminder()
                     util.scheduleTasks()
                     util.startBackgroundService()
@@ -92,6 +92,10 @@ class MainActivity : AppCompatActivity() {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
+        } else {
+            util.startReminder()
+            util.scheduleTasks()
+            util.startBackgroundService()
         }
     }
 
