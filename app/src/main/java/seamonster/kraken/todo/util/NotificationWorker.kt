@@ -49,11 +49,11 @@ class NotificationWorker(private val context: Context, params: WorkerParameters)
             .setAutoCancel(true)
             .build()
         val id = (task.createdAt ?: System.currentTimeMillis()).toInt()
-        notify(id, notification)
+        notifyTask(id, notification)
         updateTask(task)
     }
 
-    private fun notify(id: Int, notification: Notification){
+    private fun notifyTask(id: Int, notification: Notification){
         with(NotificationManagerCompat.from(context)) {
             if (getNotificationChannel(CHANNEL_ID) == null) { // create a notification channel
                 val channel = NotificationChannelCompat
